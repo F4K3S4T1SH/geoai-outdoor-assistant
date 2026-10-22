@@ -28,7 +28,8 @@ async def fetch(url, params, ttl=900, post=False):
             if time.time()-cached['epoch'] < ttl:
                 return cached['data'], dict(cached['source'], cached=True)
         try:
-            async with httpx.AsyncClient(timeout=45, headers={'User-Agent': 'GeoAIHackathonPrototype/0.1'}) as c:
+            timeout=httpx.Timeout(28 if post else 12, connect=4)
+            async with httpx.AsyncClient(timeout=timeout, headers={'User-Agent': 'GeoAIHackathonPrototype/0.1'}) as c:
                 r = await (c.post(url, data=params) if post else c.get(url, params=params))
                 r.raise_for_status()
                 data = r.json()

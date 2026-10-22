@@ -35,12 +35,28 @@ def activities(): return list(ACTIVITIES)
 
 @app.post('/ask')
 async def ask(q:Query):
-    async with GATE:
-        try: return await recommend(q)
+    try: await asyncio.wait_for(GATE.acquire(),timeout=1)
+    except TimeoutError: raise HTTPException(429,detail='The laptop is answering another question. Please retry shortly.',headers={'Retry-After':'10'})
+    try:
+        try:
+            async with asyncio.timeout(85): return await recommend(q)
+        except TimeoutError: raise HTTPException(504,detail='Live data collection exceeded the request time limit. Please retry; no results were invented.')
         except data.SourceError as e: raise HTTPException(503,detail={'status':'source_unavailable','message':str(e)})
         except httpx.HTTPError as e: raise HTTPException(503,detail='Local small model unavailable or timed out') from e
         except (ValueError,KeyError,TypeError) as e:
             raise HTTPException(422,detail='Could not interpret the request. Please specify activity, place and dates clearly.') from e
+    finally: GATE.release()
+
+async def venue_evidence(place):
+    weather,ws=await data.forecast(place['lat'],place['lon'])
+    sources=[ws]; failures=[]
+    try:
+        aq,aas=await data.air(place['lat'],place['lon']); sources.append(aas)
+        aqmap=dict(zip(aq['hourly']['time'],aq['hourly']['us_aqi']))
+    except data.SourceError:
+        aqmap={}; failures.append('Air quality unavailable for '+place['name'])
+    ctx,cs=await data.context(place['lat'],place['lon']); sources.append(cs)
+    return weather,aqmap,ctx,sources,failures
 
 async def recommend(q):
     now=datetime.now(TZ)
@@ -79,12 +95,8 @@ async def recommend(q):
     options=[]; failures=[]
     for place in venues:
         try:
-            weather,ws=await data.forecast(place['lat'],place['lon']); sources.append(ws)
-            try:
-                aq,aas=await data.air(place['lat'],place['lon']); sources.append(aas)
-                aqmap=dict(zip(aq['hourly']['time'],aq['hourly']['us_aqi']))
-            except data.SourceError: aqmap={}; failures.append('Air quality unavailable for '+place['name'])
-            ctx,cs=await data.context(place['lat'],place['lon']); sources.append(cs)
+            weather,aqmap,ctx,ss,ff=await asyncio.wait_for(venue_evidence(place),timeout=12)
+            sources.extend(ss); failures.extend(ff)
             h=weather['hourly']
             for i,t in enumerate(h['time']):
                 dt=datetime.fromisoformat(t).replace(tzinfo=TZ)
@@ -94,7 +106,7 @@ async def recommend(q):
                 value,blockers,reasons=score(activity,profile,w,aqmap.get(t),features)
                 options.append({'place':place,'time':dt.isoformat(),'score':value,'avoid_reasons':blockers,
                                 'tradeoffs':reasons,'weather':w,'us_aqi':aqmap.get(t),'geographic_context':features})
-        except data.SourceError: failures.append('Live data unavailable for '+place['name'])
+        except (data.SourceError,TimeoutError): failures.append('Live data unavailable or timed out for '+place['name'])
     valid=sorted([o for o in options if o['score'] is not None and not o['avoid_reasons']],key=lambda o:(-o['score'],o['place']['distance_km'],o['time']))
     best=valid[0] if valid else None
     model_evidence={}

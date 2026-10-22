@@ -46,3 +46,10 @@ def test_grounded_recommendation_flow(monkeypatch):
     assert result['best']['us_aqi']==30
     assert result['compared']['place_hour_pairs']==1
     assert all(s==source for s in result['sources'])
+
+def test_request_timeout_returns_explicit_error(monkeypatch):
+    async def timeout(*args): raise TimeoutError('Fixture timeout')
+    monkeypatch.setattr(module,'recommend',timeout)
+    response=TestClient(module.app).post('/ask',json={'question':'Go running tomorrow'})
+    assert response.status_code==504
+    assert 'no results were invented' in response.json()['detail']
