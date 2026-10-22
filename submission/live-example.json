@@ -1,0 +1,734 @@
+{
+  "status": "avoid_or_insufficient_data",
+  "request": {
+    "activity": "running",
+    "location": "Powai",
+    "radius_km": 5,
+    "start": "2026-10-24T06:00",
+    "profile": "general",
+    "clarification": null,
+    "end": "2026-10-24T10:00"
+  },
+  "summary": "No compared place/time passed all checks, or evidence was incomplete.",
+  "compared": {
+    "venues": 5,
+    "place_hour_pairs": 20
+  },
+  "avoided_options": [
+    {
+      "place": {
+        "id": "node/11698060710",
+        "name": "Hiranandani Gardens",
+        "lat": 19.1194394,
+        "lon": 72.9065475,
+        "distance_km": 0.21,
+        "tags": {
+          "leisure": "garden",
+          "name": "Hiranandani Gardens"
+        },
+        "url": "https://www.openstreetmap.org/node/11698060710"
+      },
+      "time": "2026-10-24T06:00:00+05:30",
+      "score": 92.4,
+      "avoid_reasons": [
+        "Daylight required; venue lighting unverified",
+        "US AQI exceeds prototype profile limit"
+      ],
+      "tradeoffs": [],
+      "weather": {
+        "temperature_2m": 25.6,
+        "apparent_temperature": 30.3,
+        "precipitation_probability": 0,
+        "wind_speed_10m": 4.5,
+        "wind_direction_10m": 40,
+        "weather_code": 0,
+        "is_day": 0,
+        "uv_index": 0.0
+      },
+      "us_aqi": 161,
+      "geographic_context": [
+        {
+          "kind": "major_road",
+          "distance_m": 146,
+          "upwind_sector": false,
+          "osm_id": "way/273833829"
+        },
+        {
+          "kind": "major_road",
+          "distance_m": 102,
+          "upwind_sector": false,
+          "osm_id": "way/273833832"
+        },
+        {
+          "kind": "major_road",
+          "distance_m": 399,
+          "upwind_sector": false,
+          "osm_id": "way/273833835"
+        },
+        {
+          "kind": "major_road",
+          "distance_m": 92,
+          "upwind_sector": false,
+          "osm_id": "way/1035922730"
+        },
+        {
+          "kind": "major_road",
+          "distance_m": 153,
+          "upwind_sector": false,
+          "osm_id": "way/1274595608"
+        },
+        {
+          "kind": "major_road",
+          "distance_m": 700,
+          "upwind_sector": false,
+          "osm_id": "way/1334158120"
+        },
+        {
+          "kind": "major_road",
+          "distance_m": 679,
+          "upwind_sector": false,
+          "osm_id": "way/1334158121"
+        },
+        {
+          "kind": "major_road",
+          "distance_m": 684,
+          "upwind_sector": false,
+          "osm_id": "way/1334158123"
+        },
+        {
+          "kind": "major_road",
+          "distance_m": 148,
+          "upwind_sector": false,
+          "osm_id": "way/1524318973"
+        },
+        {
+          "kind": "major_road",
+          "distance_m": 142,
+          "upwind_sector": false,
+          "osm_id": "way/1524318975"
+        },
+        {
+          "kind": "major_road",
+          "distance_m": 140,
+          "upwind_sector": false,
+          "osm_id": "way/1524318976"
+        }
+      ]
+    },
+    {
+      "place": {
+        "id": "way/547687326",
+        "name": "Hiranandani Garden",
+        "lat": 19.1191917,
+        "lon": 72.9071959,
+        "distance_km": 0.22,
+        "tags": {
+          "addr:city": "Mumbai",
+          "addr:postcode": "400076",
+          "addr:unit": "Powai",
+          "leisure": "park",
+          "name": "Hiranandani Garden"
+        },
+        "url": "https://www.openstreetmap.org/way/547687326"
+      },
+      "time": "2026-10-24T06:00:00+05:30",
+      "score": 92.4,
+      "avoid_reasons": [
+        "Daylight required; venue lighting unverified",
+        "US AQI exceeds prototype profile limit"
+      ],
+      "tradeoffs": [],
+      "weather": {
+        "temperature_2m": 25.6,
+        "apparent_temperature": 30.3,
+        "precipitation_probability": 0,
+        "wind_speed_10m": 4.5,
+        "wind_direction_10m": 40,
+        "weather_code": 0,
+        "is_day": 0,
+        "uv_index": 0.0
+      },
+      "us_aqi": 161,
+      "geographic_context": [
+        {
+          "kind": "major_road",
+          "distance_m": 219,
+          "upwind_sector": false,
+          "osm_id": "way/273833829"
+        },
+        {
+          "kind": "major_road",
+          "distance_m": 174,
+          "upwind_sector": false,
+          "osm_id": "way/273833832"
+        },
+        {
+          "kind": "major_road",
+          "distance_m": 469,
+          "upwind_sector": false,
+          "osm_id": "way/273833835"
+        },
+        {
+          "kind": "major_road",
+          "distance_m": 149,
+          "upwind_sector": false,
+          "osm_id": "way/1035922730"
+        },
+        {
+          "kind": "major_road",
+          "distance_m": 226,
+          "upwind_sector": false,
+          "osm_id": "way/1274595608"
+        },
+        {
+          "kind": "major_road",
+          "distance_m": 221,
+          "upwind_sector": false,
+          "osm_id": "way/1524318973"
+        },
+        {
+          "kind": "major_road",
+          "distance_m": 216,
+          "upwind_sector": false,
+          "osm_id": "way/1524318975"
+        },
+        {
+          "kind": "major_road",
+          "distance_m": 212,
+          "upwind_sector": false,
+          "osm_id": "way/1524318976"
+        }
+      ]
+    },
+    {
+      "place": {
+        "id": "node/11698035536",
+        "name": "Powai Vihar Park",
+        "lat": 19.1171079,
+        "lon": 72.9029746,
+        "distance_km": 0.32,
+        "tags": {
+          "leisure": "park",
+          "name": "Powai Vihar Park"
+        },
+        "url": "https://www.openstreetmap.org/node/11698035536"
+      },
+      "time": "2026-10-24T06:00:00+05:30",
+      "score": 77.4,
+      "avoid_reasons": [
+        "Daylight required; venue lighting unverified",
+        "US AQI exceeds prototype profile limit"
+      ],
+      "tradeoffs": [
+        "Mapped road or industry lies in the upwind sector; exposure proxy only"
+      ],
+      "weather": {
+        "temperature_2m": 25.6,
+        "apparent_temperature": 30.3,
+        "precipitation_probability": 0,
+        "wind_speed_10m": 4.5,
+        "wind_direction_10m": 40,
+        "weather_code": 0,
+        "is_day": 0,
+        "uv_index": 0.0
+      },
+      "us_aqi": 161,
+      "geographic_context": [
+        {
+          "kind": "major_road",
+          "distance_m": 246,
+          "upwind_sector": true,
+          "osm_id": "way/273833829"
+        },
+        {
+          "kind": "major_road",
+          "distance_m": 386,
+          "upwind_sector": true,
+          "osm_id": "way/273833832"
+        },
+        {
+          "kind": "major_road",
+          "distance_m": 270,
+          "upwind_sector": false,
+          "osm_id": "way/273833835"
+        },
+        {
+          "kind": "water",
+          "distance_m": 236,
+          "upwind_sector": false,
+          "osm_id": "way/360330512"
+        },
+        {
+          "kind": "major_road",
+          "distance_m": 373,
+          "upwind_sector": true,
+          "osm_id": "way/1035922730"
+        },
+        {
+          "kind": "major_road",
+          "distance_m": 661,
+          "upwind_sector": false,
+          "osm_id": "way/1251973964"
+        },
+        {
+          "kind": "major_road",
+          "distance_m": 258,
+          "upwind_sector": true,
+          "osm_id": "way/1274595608"
+        },
+        {
+          "kind": "major_road",
+          "distance_m": 471,
+          "upwind_sector": false,
+          "osm_id": "way/1334158120"
+        },
+        {
+          "kind": "major_road",
+          "distance_m": 451,
+          "upwind_sector": false,
+          "osm_id": "way/1334158121"
+        },
+        {
+          "kind": "major_road",
+          "distance_m": 467,
+          "upwind_sector": false,
+          "osm_id": "way/1334158122"
+        },
+        {
+          "kind": "major_road",
+          "distance_m": 448,
+          "upwind_sector": false,
+          "osm_id": "way/1334158123"
+        },
+        {
+          "kind": "major_road",
+          "distance_m": 375,
+          "upwind_sector": true,
+          "osm_id": "way/1524318973"
+        },
+        {
+          "kind": "major_road",
+          "distance_m": 380,
+          "upwind_sector": true,
+          "osm_id": "way/1524318975"
+        },
+        {
+          "kind": "major_road",
+          "distance_m": 366,
+          "upwind_sector": true,
+          "osm_id": "way/1524318976"
+        },
+        {
+          "kind": "industry",
+          "distance_m": 963,
+          "upwind_sector": false,
+          "osm_id": "way/1531594091"
+        }
+      ]
+    },
+    {
+      "place": {
+        "id": "node/11697785011",
+        "name": "Powai Lake Garden",
+        "lat": 19.1198038,
+        "lon": 72.9033493,
+        "distance_km": 0.37,
+        "tags": {
+          "leisure": "garden",
+          "name": "Powai Lake Garden"
+        },
+        "url": "https://www.openstreetmap.org/node/11697785011"
+      },
+      "time": "2026-10-24T06:00:00+05:30",
+      "score": 92.4,
+      "avoid_reasons": [
+        "Daylight required; venue lighting unverified",
+        "US AQI exceeds prototype profile limit"
+      ],
+      "tradeoffs": [],
+      "weather": {
+        "temperature_2m": 25.6,
+        "apparent_temperature": 30.3,
+        "precipitation_probability": 0,
+        "wind_speed_10m": 4.5,
+        "wind_direction_10m": 40,
+        "weather_code": 0,
+        "is_day": 0,
+        "uv_index": 0.0
+      },
+      "us_aqi": 161,
+      "geographic_context": [
+        {
+          "kind": "major_road",
+          "distance_m": 57,
+          "upwind_sector": false,
+          "osm_id": "way/273833829"
+        },
+        {
+          "kind": "major_road",
+          "distance_m": 200,
+          "upwind_sector": false,
+          "osm_id": "way/273833832"
+        },
+        {
+          "kind": "major_road",
+          "distance_m": 70,
+          "upwind_sector": false,
+          "osm_id": "way/273833835"
+        },
+        {
+          "kind": "water",
+          "distance_m": 378,
+          "upwind_sector": false,
+          "osm_id": "way/360330512"
+        },
+        {
+          "kind": "major_road",
+          "distance_m": 199,
+          "upwind_sector": false,
+          "osm_id": "way/1035922730"
+        },
+        {
+          "kind": "major_road",
+          "distance_m": 613,
+          "upwind_sector": false,
+          "osm_id": "way/1251973955"
+        },
+        {
+          "kind": "major_road",
+          "distance_m": 506,
+          "upwind_sector": false,
+          "osm_id": "way/1251973964"
+        },
+        {
+          "kind": "major_road",
+          "distance_m": 44,
+          "upwind_sector": false,
+          "osm_id": "way/1274595608"
+        },
+        {
+          "kind": "major_road",
+          "distance_m": 362,
+          "upwind_sector": false,
+          "osm_id": "way/1334158120"
+        },
+        {
+          "kind": "major_road",
+          "distance_m": 341,
+          "upwind_sector": false,
+          "osm_id": "way/1334158121"
+        },
+        {
+          "kind": "major_road",
+          "distance_m": 365,
+          "upwind_sector": false,
+          "osm_id": "way/1334158122"
+        },
+        {
+          "kind": "major_road",
+          "distance_m": 346,
+          "upwind_sector": false,
+          "osm_id": "way/1334158123"
+        },
+        {
+          "kind": "major_road",
+          "distance_m": 188,
+          "upwind_sector": false,
+          "osm_id": "way/1524318973"
+        },
+        {
+          "kind": "major_road",
+          "distance_m": 194,
+          "upwind_sector": false,
+          "osm_id": "way/1524318975"
+        },
+        {
+          "kind": "major_road",
+          "distance_m": 192,
+          "upwind_sector": false,
+          "osm_id": "way/1524318976"
+        }
+      ]
+    },
+    {
+      "place": {
+        "id": "node/11698060710",
+        "name": "Hiranandani Gardens",
+        "lat": 19.1194394,
+        "lon": 72.9065475,
+        "distance_km": 0.21,
+        "tags": {
+          "leisure": "garden",
+          "name": "Hiranandani Gardens"
+        },
+        "url": "https://www.openstreetmap.org/node/11698060710"
+      },
+      "time": "2026-10-24T07:00:00+05:30",
+      "score": 91.7,
+      "avoid_reasons": [
+        "US AQI exceeds prototype profile limit"
+      ],
+      "tradeoffs": [],
+      "weather": {
+        "temperature_2m": 26.4,
+        "apparent_temperature": 30.9,
+        "precipitation_probability": 0,
+        "wind_speed_10m": 5.3,
+        "wind_direction_10m": 45,
+        "weather_code": 2,
+        "is_day": 1,
+        "uv_index": 0.2
+      },
+      "us_aqi": 161,
+      "geographic_context": [
+        {
+          "kind": "major_road",
+          "distance_m": 146,
+          "upwind_sector": false,
+          "osm_id": "way/273833829"
+        },
+        {
+          "kind": "major_road",
+          "distance_m": 102,
+          "upwind_sector": false,
+          "osm_id": "way/273833832"
+        },
+        {
+          "kind": "major_road",
+          "distance_m": 399,
+          "upwind_sector": false,
+          "osm_id": "way/273833835"
+        },
+        {
+          "kind": "major_road",
+          "distance_m": 92,
+          "upwind_sector": false,
+          "osm_id": "way/1035922730"
+        },
+        {
+          "kind": "major_road",
+          "distance_m": 153,
+          "upwind_sector": false,
+          "osm_id": "way/1274595608"
+        },
+        {
+          "kind": "major_road",
+          "distance_m": 700,
+          "upwind_sector": false,
+          "osm_id": "way/1334158120"
+        },
+        {
+          "kind": "major_road",
+          "distance_m": 679,
+          "upwind_sector": false,
+          "osm_id": "way/1334158121"
+        },
+        {
+          "kind": "major_road",
+          "distance_m": 684,
+          "upwind_sector": false,
+          "osm_id": "way/1334158123"
+        },
+        {
+          "kind": "major_road",
+          "distance_m": 148,
+          "upwind_sector": false,
+          "osm_id": "way/1524318973"
+        },
+        {
+          "kind": "major_road",
+          "distance_m": 142,
+          "upwind_sector": false,
+          "osm_id": "way/1524318975"
+        },
+        {
+          "kind": "major_road",
+          "distance_m": 140,
+          "upwind_sector": false,
+          "osm_id": "way/1524318976"
+        }
+      ]
+    }
+  ],
+  "data_failures": [
+    "Live data unavailable for Forest Park"
+  ],
+  "sources": [
+    {
+      "url": "https://overpass-api.de/api/interpreter",
+      "parameters": {
+        "data": "[out:json][timeout:25];(nwr(around:5000,19.1176,72.906)[leisure~\"^(park|pitch|sports_centre|golf_course|nature_reserve|garden)$\"];nwr(around:5000,19.1176,72.906)[tourism=\"viewpoint\"];);out center tags;"
+      },
+      "fetched_at": "2026-10-22T19:04:21.827904+00:00",
+      "cached": true
+    },
+    {
+      "url": "https://api.open-meteo.com/v1/forecast?latitude=19.1194394&longitude=72.9065475&hourly=temperature_2m%2Capparent_temperature%2Cprecipitation_probability%2Cwind_speed_10m%2Cwind_direction_10m%2Cweather_code%2Cis_day%2Cuv_index&timezone=Asia%2FKolkata&forecast_days=7",
+      "parameters": {
+        "latitude": 19.1194394,
+        "longitude": 72.9065475,
+        "hourly": "temperature_2m,apparent_temperature,precipitation_probability,wind_speed_10m,wind_direction_10m,weather_code,is_day,uv_index",
+        "timezone": "Asia/Kolkata",
+        "forecast_days": 7
+      },
+      "fetched_at": "2026-10-22T19:05:14.882464+00:00",
+      "cached": false
+    },
+    {
+      "url": "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=19.1194394&longitude=72.9065475&hourly=us_aqi%2Cpm2_5&timezone=Asia%2FKolkata&forecast_days=5",
+      "parameters": {
+        "latitude": 19.1194394,
+        "longitude": 72.9065475,
+        "hourly": "us_aqi,pm2_5",
+        "timezone": "Asia/Kolkata",
+        "forecast_days": 5
+      },
+      "fetched_at": "2026-10-22T19:05:15.937255+00:00",
+      "cached": false
+    },
+    {
+      "url": "https://overpass-api.de/api/interpreter",
+      "parameters": {
+        "data": "[out:json][timeout:20];(way(around:700,19.1194394,72.9065475)[highway~\"^(motorway|trunk|primary)$\"];nwr(around:1000,19.1194394,72.9065475)[landuse=\"industrial\"];nwr(around:500,19.1194394,72.9065475)[natural=\"water\"];nwr(around:500,19.1194394,72.9065475)[landuse~\"^(forest|grass)$\"];);out center tags geom;"
+      },
+      "fetched_at": "2026-10-22T19:06:01.094902+00:00",
+      "cached": false
+    },
+    {
+      "url": "https://api.open-meteo.com/v1/forecast?latitude=19.1191917&longitude=72.9071959&hourly=temperature_2m%2Capparent_temperature%2Cprecipitation_probability%2Cwind_speed_10m%2Cwind_direction_10m%2Cweather_code%2Cis_day%2Cuv_index&timezone=Asia%2FKolkata&forecast_days=7",
+      "parameters": {
+        "latitude": 19.1191917,
+        "longitude": 72.9071959,
+        "hourly": "temperature_2m,apparent_temperature,precipitation_probability,wind_speed_10m,wind_direction_10m,weather_code,is_day,uv_index",
+        "timezone": "Asia/Kolkata",
+        "forecast_days": 7
+      },
+      "fetched_at": "2026-10-22T19:06:02.036385+00:00",
+      "cached": false
+    },
+    {
+      "url": "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=19.1191917&longitude=72.9071959&hourly=us_aqi%2Cpm2_5&timezone=Asia%2FKolkata&forecast_days=5",
+      "parameters": {
+        "latitude": 19.1191917,
+        "longitude": 72.9071959,
+        "hourly": "us_aqi,pm2_5",
+        "timezone": "Asia/Kolkata",
+        "forecast_days": 5
+      },
+      "fetched_at": "2026-10-22T19:06:03.041825+00:00",
+      "cached": false
+    },
+    {
+      "url": "https://overpass-api.de/api/interpreter",
+      "parameters": {
+        "data": "[out:json][timeout:20];(way(around:700,19.1191917,72.9071959)[highway~\"^(motorway|trunk|primary)$\"];nwr(around:1000,19.1191917,72.9071959)[landuse=\"industrial\"];nwr(around:500,19.1191917,72.9071959)[natural=\"water\"];nwr(around:500,19.1191917,72.9071959)[landuse~\"^(forest|grass)$\"];);out center tags geom;"
+      },
+      "fetched_at": "2026-10-22T19:06:37.448712+00:00",
+      "cached": false
+    },
+    {
+      "url": "https://api.open-meteo.com/v1/forecast?latitude=19.1171079&longitude=72.9029746&hourly=temperature_2m%2Capparent_temperature%2Cprecipitation_probability%2Cwind_speed_10m%2Cwind_direction_10m%2Cweather_code%2Cis_day%2Cuv_index&timezone=Asia%2FKolkata&forecast_days=7",
+      "parameters": {
+        "latitude": 19.1171079,
+        "longitude": 72.9029746,
+        "hourly": "temperature_2m,apparent_temperature,precipitation_probability,wind_speed_10m,wind_direction_10m,weather_code,is_day,uv_index",
+        "timezone": "Asia/Kolkata",
+        "forecast_days": 7
+      },
+      "fetched_at": "2026-10-22T19:06:38.380959+00:00",
+      "cached": false
+    },
+    {
+      "url": "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=19.1171079&longitude=72.9029746&hourly=us_aqi%2Cpm2_5&timezone=Asia%2FKolkata&forecast_days=5",
+      "parameters": {
+        "latitude": 19.1171079,
+        "longitude": 72.9029746,
+        "hourly": "us_aqi,pm2_5",
+        "timezone": "Asia/Kolkata",
+        "forecast_days": 5
+      },
+      "fetched_at": "2026-10-22T19:06:39.304523+00:00",
+      "cached": false
+    },
+    {
+      "url": "https://overpass-api.de/api/interpreter",
+      "parameters": {
+        "data": "[out:json][timeout:20];(way(around:700,19.1171079,72.9029746)[highway~\"^(motorway|trunk|primary)$\"];nwr(around:1000,19.1171079,72.9029746)[landuse=\"industrial\"];nwr(around:500,19.1171079,72.9029746)[natural=\"water\"];nwr(around:500,19.1171079,72.9029746)[landuse~\"^(forest|grass)$\"];);out center tags geom;"
+      },
+      "fetched_at": "2026-10-22T19:07:11.058347+00:00",
+      "cached": false
+    },
+    {
+      "url": "https://api.open-meteo.com/v1/forecast?latitude=19.1198038&longitude=72.9033493&hourly=temperature_2m%2Capparent_temperature%2Cprecipitation_probability%2Cwind_speed_10m%2Cwind_direction_10m%2Cweather_code%2Cis_day%2Cuv_index&timezone=Asia%2FKolkata&forecast_days=7",
+      "parameters": {
+        "latitude": 19.1198038,
+        "longitude": 72.9033493,
+        "hourly": "temperature_2m,apparent_temperature,precipitation_probability,wind_speed_10m,wind_direction_10m,weather_code,is_day,uv_index",
+        "timezone": "Asia/Kolkata",
+        "forecast_days": 7
+      },
+      "fetched_at": "2026-10-22T19:07:11.938389+00:00",
+      "cached": false
+    },
+    {
+      "url": "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=19.1198038&longitude=72.9033493&hourly=us_aqi%2Cpm2_5&timezone=Asia%2FKolkata&forecast_days=5",
+      "parameters": {
+        "latitude": 19.1198038,
+        "longitude": 72.9033493,
+        "hourly": "us_aqi,pm2_5",
+        "timezone": "Asia/Kolkata",
+        "forecast_days": 5
+      },
+      "fetched_at": "2026-10-22T19:07:12.896682+00:00",
+      "cached": false
+    },
+    {
+      "url": "https://overpass-api.de/api/interpreter",
+      "parameters": {
+        "data": "[out:json][timeout:20];(way(around:700,19.1198038,72.9033493)[highway~\"^(motorway|trunk|primary)$\"];nwr(around:1000,19.1198038,72.9033493)[landuse=\"industrial\"];nwr(around:500,19.1198038,72.9033493)[natural=\"water\"];nwr(around:500,19.1198038,72.9033493)[landuse~\"^(forest|grass)$\"];);out center tags geom;"
+      },
+      "fetched_at": "2026-10-22T19:07:43.271454+00:00",
+      "cached": false
+    },
+    {
+      "url": "https://api.open-meteo.com/v1/forecast?latitude=19.1133024&longitude=72.9074704&hourly=temperature_2m%2Capparent_temperature%2Cprecipitation_probability%2Cwind_speed_10m%2Cwind_direction_10m%2Cweather_code%2Cis_day%2Cuv_index&timezone=Asia%2FKolkata&forecast_days=7",
+      "parameters": {
+        "latitude": 19.1133024,
+        "longitude": 72.9074704,
+        "hourly": "temperature_2m,apparent_temperature,precipitation_probability,wind_speed_10m,wind_direction_10m,weather_code,is_day,uv_index",
+        "timezone": "Asia/Kolkata",
+        "forecast_days": 7
+      },
+      "fetched_at": "2026-10-22T19:07:44.155102+00:00",
+      "cached": false
+    },
+    {
+      "url": "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=19.1133024&longitude=72.9074704&hourly=us_aqi%2Cpm2_5&timezone=Asia%2FKolkata&forecast_days=5",
+      "parameters": {
+        "latitude": 19.1133024,
+        "longitude": 72.9074704,
+        "hourly": "us_aqi,pm2_5",
+        "timezone": "Asia/Kolkata",
+        "forecast_days": 5
+      },
+      "fetched_at": "2026-10-22T19:07:45.028959+00:00",
+      "cached": false
+    }
+  ],
+  "limitations": [
+    "Prototype suitability scores are configurable heuristics, not medical advice or a safety guarantee.",
+    "AQI is a regional model forecast, not street-level measurement. US AQI scale is used.",
+    "Road and industry wind alignment is an exposure proxy, not a pollution concentration estimate.",
+    "Map coverage, access and opening hours may be incomplete. No live traffic or travel time is available.",
+    "At most the five nearest compatible named venues are compared. Hourly windows do not verify full activity duration."
+  ],
+  "attribution": [
+    "\u00a9 OpenStreetMap contributors",
+    "Weather: Open-Meteo",
+    "Air quality: CAMS via Open-Meteo",
+    "Geocoding: GeoNames via Open-Meteo"
+  ],
+  "model": "Qwen2.5-1.5B-Instruct",
+  "generated_at": "2026-10-23T00:38:32.456908+05:30",
+  "example_note": "Actual live development run near Powai. This is a recorded response, never a runtime fallback. Source forecasts and suitability can change."
+}

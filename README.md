@@ -1,6 +1,10 @@
 # GeoAI Outdoor Assistant
 
-Project owner: `F4K3S4T1SH` on GitHub and Hugging Face. Repository names are prepared as `geoai-outdoor-assistant` (code) and `geoai-outdoor-model` (model configuration); publication must be verified separately.
+Project owner: `F4K3S4T1SH` on GitHub and Hugging Face.
+
+- Source: https://github.com/F4K3S4T1SH/geoai-outdoor-assistant
+- Public model configuration: https://huggingface.co/F4K3S4T1SH/geoai-outdoor-model
+- Public judging API: not deployed yet.
 
 Working prototype for GeoAI Hackathon 2026. Parses free-form questions with a locally run Qwen2.5 1.5B model, finds named OpenStreetMap venues, and ranks place/hour combinations using live forecast data and explicit geographic heuristics.
 
@@ -38,7 +42,7 @@ The model extracts intent, then compares a shortlist of eligible candidates and 
 ## Known limitations and work remaining
 
 - Not deployed; no public judging endpoint yet.
-- Public team model repository and model card still need publication. The local GGUF is not a substitute for the required public submission repository and from_pretrained configuration.
+- Public team model configuration repository and model card are published. The original unchanged base model loads with upstream `from_pretrained`; the CPU runtime uses its official GGUF artifact.
 - Presentation and live demo package still need preparation.
 - No live traffic, route estimation, full activity duration checks or verified venue hours.
 - Candidate search compares at most five nearest compatible named mapped venues. OSM sport tagging and access coverage vary; cycling venues do not imply verified cycling routes.
@@ -52,8 +56,9 @@ The model extracts intent, then compares a shortlist of eligible candidates and 
 - Official GGUF downloaded and SHA256 verified against Hugging Face metadata.
 - Local CPU inference operational; initial extraction requests took approximately 3.5–4.7 seconds. An extraction plus candidate comparison took 6.95 seconds in a synthetic-candidate check.
 - Fifteen automated tests pass, including source failure, wind orientation, profile limits, relative dates and a fixture-based recommendation flow.
-- Live weather, air quality and geocoding calls succeeded. Live venue-map queries failed across tested public endpoints (capacity errors/timeouts), so a complete live recommendation has NOT yet been verified.
-- Local API and model health verified. Public hosting and submission accounts remain pending.
+- Live weather, air quality and geocoding calls succeeded, although a later weather request timed out. Map requests initially failed but a later venue query succeeded.
+- A complete live development flow compared 20 place/hour combinations across five venues near Powai. It returned `avoid_or_insufficient_data`: forecast US AQI 161 exceeded the general-profile prototype limit; the earliest hour also failed the daylight check. One venue had unavailable data. Total latency was 201.59 seconds. This validates an evidence-based rejection, not a positive recommendation. The recorded result is in `submission/live-example.json` and is never used as a runtime fallback.
+- Local API and model health verified. Source and model configuration repositories are published. Public hosting remains pending.
 
 ## Disclosure
 
