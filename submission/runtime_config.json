@@ -1,0 +1,13 @@
+{
+  "base_model": "Qwen/Qwen2.5-1.5B-Instruct",
+  "parameter_count": 1540000000,
+  "fine_tuned": false,
+  "gguf_repo": "Qwen/Qwen2.5-1.5B-Instruct-GGUF",
+  "gguf_revision": "91cad51170dc346986eccefdc2dd33a9da36ead9",
+  "gguf_file": "qwen2.5-1.5b-instruct-q4_k_m.gguf",
+  "sha256": "6a1a2eb6d15622bf3c96857206351ba97e1af16c30d7a74ee38970e434e9407e",
+  "temperature": 0,
+  "context_length": 4096,
+  "runtime": "llama.cpp b11823, CPU",
+  "licence": "apache-2.0"
+}
