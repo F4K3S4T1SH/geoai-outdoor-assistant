@@ -1,0 +1,12 @@
+const assert=require('node:assert/strict');
+const {windowMetrics,representativeFailures}=require('../geoai/static/plan-evidence.js');
+const sample=(t,r,aq,w)=>({weather:{apparent_temperature:t,precipitation_probability:r,wind_speed_10m:w},us_aqi:aq});
+const result=windowMetrics({weather:{apparent_temperature:29},hourly_evidence:[sample(30,37,32,4),sample(31.1,40,35,5),sample(33.4,48,39,7)]});
+assert.equal(result.temperature,33.4);assert.equal(result.rain,48);assert.equal(result.aqi,39);assert.equal(result.wind,7);assert.equal(result.partial,false);
+const missing=windowMetrics({hourly_evidence:[sample(29,null,32,4),sample(31,40,null,5)]});
+assert.equal(missing.partial,true);assert.equal(missing.rain,40);assert.equal(missing.aqi,32);
+assert.equal(windowMetrics({hourly_evidence:[sample(NaN,null,Infinity,null)]}).temperature,null);
+const darkness={condition_reasons:['Outside daylight']},sameReason={condition_reasons:['Outside daylight']},heat={condition_reasons:['Too hot']};
+assert.deepEqual(representativeFailures([darkness,sameReason,heat]),[darkness,heat]);
+assert.deepEqual(representativeFailures([darkness,sameReason]),[darkness,sameReason]);
+console.log('Window display checks passed: later hazards, missing values and distinct rejection causes.');

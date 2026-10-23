@@ -3,3 +3,5 @@
 
 .hero>*,.result-grid>*,.field{min-width:0}input,select,textarea{max-width:100%}.source-row a{overflow-wrap:anywhere}.form-footer p{overflow-wrap:anywhere}
 @media(max-width:560px){.preferences .four{grid-template-columns:1fr}.form-grid.four input{font-size:14px;padding:12px}}
+
+.metric-basis{font-size:12px;color:var(--muted);margin:18px 0 0}.hourly-evidence{font-size:12px;margin:14px 0;color:var(--muted)}.hourly-evidence summary,.more-options>summary{cursor:pointer;color:var(--green)}.hourly-evidence p{padding:6px 0;border-bottom:1px solid var(--line)}.more-options>summary{padding:16px 0}

@@ -1,0 +1,321 @@
+{
+  "request": {
+    "activity": "running",
+    "location": "Bharathi Park, Puducherry, India",
+    "start": "2026-10-24T06:00",
+    "end": "2026-10-24T10:00",
+    "profile": "general",
+    "mode": "leisure",
+    "destination": "null",
+    "out_of_scope": false,
+    "radius_km": 10.0,
+    "exercise_distance_km": 10.0,
+    "venue_scope": "nearby",
+    "pace_minutes_per_km": null,
+    "max_travel_minutes": null,
+    "duration_explicit": false,
+    "duration_minutes": 180,
+    "hours": [
+      6,
+      10
+    ],
+    "duration_basis": "Your supplied expected duration",
+    "search_radius_applied_km": 10.0
+  },
+  "outcome": {
+    "kind": "conditions_unsuitable",
+    "options_with_missing_checks": 0,
+    "options_with_unsuitable_conditions": 6
+  },
+  "checked_options": [
+    {
+      "time": "2026-10-24T06:00:00+05:30",
+      "end_time": "2026-10-24T09:00:00+05:30",
+      "condition_reasons": [
+        "The full activity window extends outside forecast daylight; venue lighting is unverified"
+      ],
+      "checks_missing": [],
+      "hourly_evidence": [
+        {
+          "time": "2026-10-24T06:00:00+05:30",
+          "weather": {
+            "temperature_2m": 24.3,
+            "apparent_temperature": 29.4,
+            "precipitation_probability": 37,
+            "wind_speed_10m": 4.7,
+            "wind_direction_10m": 310,
+            "weather_code": 3,
+            "is_day": 1,
+            "uv_index": 0.0
+          },
+          "us_aqi": 32
+        },
+        {
+          "time": "2026-10-24T07:00:00+05:30",
+          "weather": {
+            "temperature_2m": 24.9,
+            "apparent_temperature": 30.0,
+            "precipitation_probability": 19,
+            "wind_speed_10m": 4.9,
+            "wind_direction_10m": 287,
+            "weather_code": 3,
+            "is_day": 1,
+            "uv_index": 0.4
+          },
+          "us_aqi": 31
+        },
+        {
+          "time": "2026-10-24T08:00:00+05:30",
+          "weather": {
+            "temperature_2m": 25.8,
+            "apparent_temperature": 31.1,
+            "precipitation_probability": 10,
+            "wind_speed_10m": 3.9,
+            "wind_direction_10m": 292,
+            "weather_code": 3,
+            "is_day": 1,
+            "uv_index": 1.95
+          },
+          "us_aqi": 31
+        }
+      ],
+      "place": "Park Selvaradjalou"
+    },
+    {
+      "time": "2026-10-24T06:00:00+05:30",
+      "end_time": "2026-10-24T09:00:00+05:30",
+      "condition_reasons": [
+        "The full activity window extends outside forecast daylight; venue lighting is unverified"
+      ],
+      "checks_missing": [],
+      "hourly_evidence": [
+        {
+          "time": "2026-10-24T06:00:00+05:30",
+          "weather": {
+            "temperature_2m": 24.1,
+            "apparent_temperature": 29.1,
+            "precipitation_probability": 37,
+            "wind_speed_10m": 5.1,
+            "wind_direction_10m": 312,
+            "weather_code": 3,
+            "is_day": 1,
+            "uv_index": 0.05
+          },
+          "us_aqi": 32
+        },
+        {
+          "time": "2026-10-24T07:00:00+05:30",
+          "weather": {
+            "temperature_2m": 24.6,
+            "apparent_temperature": 29.6,
+            "precipitation_probability": 19,
+            "wind_speed_10m": 5.3,
+            "wind_direction_10m": 288,
+            "weather_code": 3,
+            "is_day": 1,
+            "uv_index": 0.35
+          },
+          "us_aqi": 31
+        },
+        {
+          "time": "2026-10-24T08:00:00+05:30",
+          "weather": {
+            "temperature_2m": 25.5,
+            "apparent_temperature": 30.7,
+            "precipitation_probability": 10,
+            "wind_speed_10m": 4.6,
+            "wind_direction_10m": 296,
+            "weather_code": 3,
+            "is_day": 1,
+            "uv_index": 1.5
+          },
+          "us_aqi": 31
+        }
+      ],
+      "place": "Park of Unity"
+    },
+    {
+      "time": "2026-10-24T06:00:00+05:30",
+      "end_time": "2026-10-24T09:00:00+05:30",
+      "condition_reasons": [
+        "The full activity window extends outside forecast daylight; venue lighting is unverified"
+      ],
+      "checks_missing": [],
+      "hourly_evidence": [
+        {
+          "time": "2026-10-24T06:00:00+05:30",
+          "weather": {
+            "temperature_2m": 24.1,
+            "apparent_temperature": 29.1,
+            "precipitation_probability": 37,
+            "wind_speed_10m": 5.1,
+            "wind_direction_10m": 312,
+            "weather_code": 3,
+            "is_day": 1,
+            "uv_index": 0.05
+          },
+          "us_aqi": 32
+        },
+        {
+          "time": "2026-10-24T07:00:00+05:30",
+          "weather": {
+            "temperature_2m": 24.6,
+            "apparent_temperature": 29.6,
+            "precipitation_probability": 19,
+            "wind_speed_10m": 5.3,
+            "wind_direction_10m": 288,
+            "weather_code": 3,
+            "is_day": 1,
+            "uv_index": 0.35
+          },
+          "us_aqi": 31
+        },
+        {
+          "time": "2026-10-24T08:00:00+05:30",
+          "weather": {
+            "temperature_2m": 25.5,
+            "apparent_temperature": 30.7,
+            "precipitation_probability": 10,
+            "wind_speed_10m": 4.6,
+            "wind_direction_10m": 296,
+            "weather_code": 3,
+            "is_day": 1,
+            "uv_index": 1.5
+          },
+          "us_aqi": 31
+        }
+      ],
+      "place": "Park of the Harlequin"
+    },
+    {
+      "time": "2026-10-24T07:00:00+05:30",
+      "end_time": "2026-10-24T10:00:00+05:30",
+      "condition_reasons": [
+        "Apparent temperature exceeds prototype activity limit"
+      ],
+      "checks_missing": [],
+      "hourly_evidence": [
+        {
+          "time": "2026-10-24T07:00:00+05:30",
+          "weather": {
+            "temperature_2m": 24.9,
+            "apparent_temperature": 30.0,
+            "precipitation_probability": 19,
+            "wind_speed_10m": 4.9,
+            "wind_direction_10m": 287,
+            "weather_code": 3,
+            "is_day": 1,
+            "uv_index": 0.4
+          },
+          "us_aqi": 31
+        },
+        {
+          "time": "2026-10-24T08:00:00+05:30",
+          "weather": {
+            "temperature_2m": 25.8,
+            "apparent_temperature": 31.1,
+            "precipitation_probability": 10,
+            "wind_speed_10m": 3.9,
+            "wind_direction_10m": 292,
+            "weather_code": 3,
+            "is_day": 1,
+            "uv_index": 1.95
+          },
+          "us_aqi": 31
+        },
+        {
+          "time": "2026-10-24T09:00:00+05:30",
+          "weather": {
+            "temperature_2m": 27.7,
+            "apparent_temperature": 33.4,
+            "precipitation_probability": 15,
+            "wind_speed_10m": 0.5,
+            "wind_direction_10m": 360,
+            "weather_code": 3,
+            "is_day": 1,
+            "uv_index": 3.75
+          },
+          "us_aqi": 30
+        }
+      ],
+      "place": "Park Selvaradjalou"
+    },
+    {
+      "time": "2026-10-24T07:00:00+05:30",
+      "end_time": "2026-10-24T10:00:00+05:30",
+      "condition_reasons": [
+        "Apparent temperature exceeds prototype activity limit"
+      ],
+      "checks_missing": [],
+      "hourly_evidence": [
+        {
+          "time": "2026-10-24T07:00:00+05:30",
+          "weather": {
+            "temperature_2m": 24.6,
+            "apparent_temperature": 29.6,
+            "precipitation_probability": 19,
+            "wind_speed_10m": 5.3,
+            "wind_direction_10m": 288,
+            "weather_code": 3,
+            "is_day": 1,
+            "uv_index": 0.35
+          },
+          "us_aqi": 31
+        },
+        {
+          "time": "2026-10-24T08:00:00+05:30",
+          "weather": {
+            "temperature_2m": 25.5,
+            "apparent_temperature": 30.7,
+            "precipitation_probability": 10,
+            "wind_speed_10m": 4.6,
+            "wind_direction_10m": 296,
+            "weather_code": 3,
+            "is_day": 1,
+            "uv_index": 1.5
+          },
+          "us_aqi": 31
+        },
+        {
+          "time": "2026-10-24T09:00:00+05:30",
+          "weather": {
+            "temperature_2m": 27.5,
+            "apparent_temperature": 33.2,
+            "precipitation_probability": 15,
+            "wind_speed_10m": 1.2,
+            "wind_direction_10m": 333,
+            "weather_code": 3,
+            "is_day": 1,
+            "uv_index": 3.9
+          },
+          "us_aqi": 30
+        }
+      ],
+      "place": "Park of Unity"
+    }
+  ],
+  "display_repairs": [
+    "Metrics show maxima across available hourly samples, with partial data labelled",
+    "Different rejection causes appear before duplicate explanations",
+    "Remaining declined options can be expanded",
+    "Each option exposes its hourly values"
+  ],
+  "scope": "Reproduction of the supplied question with the form duration explicitly set to 180 minutes. No threshold or eligibility changes.",
+  "running_apparent_temperature_limit_c": 32,
+  "forecast_sunrise": "2026-10-24T06:01",
+  "sunrise_source": {
+    "id": "2f83b847f1ca",
+    "url": "https://api.open-meteo.com/v1/forecast?latitude=11.9354407&longitude=79.8360801&hourly=temperature_2m%2Capparent_temperature%2Cprecipitation_probability%2Cwind_speed_10m%2Cwind_direction_10m%2Cweather_code%2Cis_day%2Cuv_index&daily=sunrise%2Csunset&timezone=Asia%2FKolkata&forecast_days=7",
+    "parameters": {
+      "latitude": 11.9354407,
+      "longitude": 79.8360801,
+      "hourly": "temperature_2m,apparent_temperature,precipitation_probability,wind_speed_10m,wind_direction_10m,weather_code,is_day,uv_index",
+      "daily": "sunrise,sunset",
+      "timezone": "Asia/Kolkata",
+      "forecast_days": 7
+    },
+    "fetched_at": "2026-10-23T16:28:28.595517+00:00",
+    "cached": true
+  },
+  "browser_verification": "Reproduced original question, confirmed Bharathi Park, selected three hours. Updated UI displayed 33.4 C for the 07:00\u201310:00 window and expandable 07:00/08:00/09:00 evidence. No console errors."
+}
