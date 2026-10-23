@@ -19,6 +19,7 @@ async def extract(question, now):
               'Tomorrow means current calendar date plus ONE day, never today. '
               'Use actual JSON null for missing fields, never the string null. '
               'Missing activity or location: ask clarification. '
+              'An exercise distance such as a 10 km run is not a search radius. Do not invent pace or duration. '
               'Walking is hiking. Birthday party is event. A cycling commute needs an origin location AND destination; never assume where work is. '
               'An unrelated question such as coding or indoor activities must set out_of_scope true. '
               'Schema: '+json.dumps(schema))

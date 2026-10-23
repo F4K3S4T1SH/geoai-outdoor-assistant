@@ -83,12 +83,32 @@ async def geocode(name):
             p=feature.get('properties',{}); coords=feature.get('geometry',{}).get('coordinates',[])
             if len(coords)!=2: continue
             hits.append({'name':p.get('name',name),'latitude':coords[1],'longitude':coords[0],
+                'venue_id':f"{ {'N':'node','W':'way','R':'relation'}.get(p.get('osm_type'),'node')}/{p['osm_id']}" if p.get('osm_id') else None,
                 'admin1':p.get('state',''),'admin2':p.get('city',''),'country':p.get('country',''),
                 'label':', '.join(dict.fromkeys(x for x in (p.get('name'),p.get('city'),p.get('state'),p.get('country')) if x))})
         if hits: return {'results':hits},source
     except SourceError: pass
     return await fetch('https://geocoding-api.open-meteo.com/v1/search',
                        {'name': name, 'count': 5, 'language': 'en', 'format': 'json'}, ttl=86400)
+
+async def venue(venue_id):
+    """Resolve a confirmed OSM identity, never substitute another nearby park."""
+    kind,number=venue_id.split('/')
+    if kind not in ('node','way','relation') or not number.isdigit(): raise SourceError('Invalid venue identity')
+    suffix='.json' if kind=='node' else '/full.json'
+    raw,source=await asyncio.wait_for(fetch(f'https://api.openstreetmap.org/api/0.6/{kind}/{number}{suffix}',{},ttl=86400),timeout=10)
+    elements=raw.get('elements',[])
+    target=next((e for e in elements if e.get('type')==kind and e.get('id')==int(number)),None)
+    if not target: raise SourceError('Confirmed venue is absent from the map response')
+    nodes={e['id']:e for e in elements if e.get('type')=='node'}
+    if kind=='node': points=[target]
+    elif kind=='way': points=[nodes[n] for n in target.get('nodes',[]) if n in nodes]
+    else:
+        members={m['ref'] for m in target.get('members',[]) if m.get('type')=='way'}
+        points=[nodes[n] for e in elements if e.get('type')=='way' and e['id'] in members for n in e.get('nodes',[]) if n in nodes]
+    if not points: raise SourceError('Confirmed venue coordinates could not be verified')
+    tags=target.get('tags',{})
+    return {'id':venue_id,'name':tags.get('name','Confirmed mapped venue'),'lat':sum(p['lat'] for p in points)/len(points),'lon':sum(p['lon'] for p in points)/len(points),'tags':tags,'distance_km':0,'url':f'https://www.openstreetmap.org/{venue_id}'},source
 
 async def overpass(q,budget=6):
     errors=[]

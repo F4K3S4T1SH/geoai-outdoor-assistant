@@ -1,5 +1,6 @@
 """Enforce explicit relative dates and profile words independently of SLM output."""
 import re
+import math
 from datetime import datetime,timedelta,time
 
 def normalize(intent,question,now):
@@ -9,8 +10,24 @@ def normalize(intent,question,now):
     if re.search(r'\b(?:birthday|wedding|gathering|fair)\b',text): out['activity']='event'
     if re.search(r'\bnature walk\b',text): out['activity']='hiking'
     if isinstance(out.get('location'),str): out['location']=re.sub(r'^(?:near|around|in)\s+','',out['location'],flags=re.I)
-    radius=re.search(r'\bwithin\s+(\d+(?:\.\d+)?)\s*(?:km|kilomet(?:er|re)s?)\b',text)
-    if radius: out['radius_km']=float(radius[1])
+    units=r'(?:kms?|kilomet(?:er|re)s?)'
+    radius=re.search(r'\bwithin\s+(\d+(?:\.\d+)?)\s*'+units+r'\b',text)
+    # Never let the model turn an exercise distance into a search radius.
+    out['radius_km']=float(radius[1]) if radius else 10
+    out['exercise_distance_km']=None
+    if out.get('activity') in ('running','cycling','hiking') or re.search(r'\b(?:run|running|jog|walk|hike|cycle|ride)\b',text):
+        for match in re.finditer(r'\b(\d+(?:\.\d+)?)\s*[- ]?'+units+r'\b',text):
+            if radius and radius.start()<=match.start()<radius.end(): continue
+            if re.search(r'(?:radius|search|nearby|from)\s*$',text[max(0,match.start()-15):match.start()]): continue
+            out['exercise_distance_km']=float(match[1]); break
+    out['venue_scope']='nearby'
+    exact=re.search(r'\b(?:inside|in|at)\s+((?:[\w\'-]+\s+){0,7}(?:park|garden|stadium|track|court|course)\b[^;?!]*)',question,re.I)
+    if exact and not re.search(r'\b(?:near|around)\b',exact[1].split(',')[0],re.I) and not re.match(r'^(?:(?:a|an|any|the)\s+)?(?:park|garden|stadium|track|court|course)\b',exact[1],re.I):
+        target=re.split(r'\b(?:today|tomorrow|this weekend|within|for|on|at\s+\d)\b',exact[1],maxsplit=1,flags=re.I)[0].strip(' ,.')
+        out['venue_scope']='exact'; out['location']=target; out['requested_venue']=target
+    out['pace_minutes_per_km']=None
+    pace=re.search(r'\b(\d+(?:\.\d+)?)\s*(?:minutes?|mins?|min)\s*(?:/|per)\s*km\b',text)
+    if pace: out['pace_minutes_per_km']=float(pace[1])
     for k in ('location','start','end','clarification'):
         if out.get(k) in ('null','None','question or null','place name or null'): out[k]=None
     for profile,pattern in [('asthma',r'\basthma\b|\basthmatic\b'),('pregnancy',r'\bpregnan'),
@@ -23,12 +40,15 @@ def normalize(intent,question,now):
             if min(ages)<16: out['profile']='child'
             elif max(ages)>=65: out['profile']='senior'
     if re.search(r'\bcommut|\bcycle to work|\bcycling to work',text): out['mode']='commute'
-    duration=re.search(r'\b(?:for\s+)?(one|two|three|four|half|\d+(?:\.\d+)?)\s*[- ]?\s*(hours?|hrs?|minutes?|mins?)\b',text)
+    duration=re.search(r'\b(?:for\s+)?(one|two|three|four|half|\d+(?:\.\d+)?)\s*[- ]?\s*(hours?|hrs?|minutes?|mins?)\b(?!\s*(?:/|per)\s*km)',text)
+    out['duration_explicit']=duration is not None
     if duration:
         number={'one':1,'two':2,'three':3,'four':4,'half':.5}.get(duration[1])
         if number is None: number=float(duration[1])
-        out['duration_minutes']=min(360,max(15,round(number*(60 if duration[2].startswith(('hour','hr')) else 1))))
+        out['duration_minutes']=min(360,max(1,round(number*(60 if duration[2].startswith(('hour','hr')) else 1))))
     else: out['duration_minutes']=60
+    if out['exercise_distance_km'] is not None and out['pace_minutes_per_km'] is not None and not out['duration_explicit']:
+        out['duration_minutes']=math.ceil(out['exercise_distance_km']*out['pace_minutes_per_km'])
     day=None
     if re.search(r'\btomorrow\b',text): day=now.date()+timedelta(days=1)
     elif re.search(r'\btoday\b|\btonight\b',text): day=now.date()

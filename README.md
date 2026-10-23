@@ -58,7 +58,7 @@ Weather/AQI cache TTL is 15 minutes; static Overpass map data and geocoding are 
 
 ## Verified checks and limitations
 
-- **67 automated checks pass**, including all ten activity flows, two-hour windows with a thunderstorm in the second hour, geographic scoring, profiles, date normalization, missing data and timeouts. These use synthetic fixtures and do not prove coverage of every real venue.
+- **86 automated checks pass**, including all ten activity flows, two-hour windows with a thunderstorm in the second hour, geographic scoring, profiles, date normalization, missing data and timeouts. These use synthetic fixtures and do not prove coverage of every real venue.
 - A live local model evaluation classified **10/10** varied activity requests after normalization. See `submission/model-evaluation.json`; this small test set is not a general accuracy claim.
 - Public model LFS SHA256 verified. `llama_cpp.Llama.from_pretrained` loaded the submitted repository snapshot and generated `OK`; see `submission/model-loading-check.json`. The optional Transformers GGUF path is documented but was not run because full dequantization exceeded free memory.
 - Real venue, weather, AQI, geocoding and bicycle-route calls have succeeded. Public map APIs have also repeatedly timed out. The application reports missing evidence, not a fabricated recommendation.
@@ -79,3 +79,11 @@ The six-slide presentation is `submission/outside-geoai-hackathon.pptx`. Docker 
 Fresh map cache entries remain usable during provider cooldowns. If Overpass fails, the app retrieves a small read-only OSM map extract around each venue (and one search-centre extract when venue search fails), serialized and cached for 24 hours. These extracts can omit unmapped features and enclosing polygons. This is a bounded prototype fallback, not a bulk downloader. Conditions that fail the prototype thresholds and incomplete evidence have separate result labels; missing checks prevent a positive recommendation. Comparison counts distinguish weather availability from complete checks.
 
 OSM map API reference: https://wiki.openstreetmap.org/wiki/API_v0.6#Retrieving_map_data_by_bounding_box:_GET_/api/0.6/map
+
+### Exercise distance and exact venues (v0.3.0)
+
+“10 km run in Bharathi Park” means a 10 km exercise target at that venue, not a nearby search. A confirmed OSM identity is verified from map data and held fixed. If it cannot be verified, no other park is substituted. The app compares time windows at that venue; “near Bharathi Park” continues to compare nearby places.
+
+Use `exercise_distance_km`, `pace_minutes_per_km` or `duration_minutes`, `venue_scope` (`exact` or `nearby`) and a confirmed `venue_id` from `/locations`. When a distance target has neither an explicit duration nor pace, the API requests clarification instead of assuming one hour. Duration from pace is rounded up to whole minutes. An exact venue response has `radius_km: null` and `search_radius_applied_km: null`.
+
+Travel directions carry `purpose: travel_to_venue` and are not exercise routes or exercise-duration estimates. Exact-venue requests do not invent an origin-to-park journey. **This application assesses conditions, not a measured running course**: exercise targets include `exercise_route.status: not_verified`; no park lap length, 10 km course or repetition count is invented. Positive distance-based results are labelled condition windows with the course unverified. See `submission/exact-venue-live-example.json` for a real public API recording.
