@@ -2,11 +2,11 @@
 
 The public connection forwards only the GeoAI HTTP application on localhost port 8000. The model server remains on localhost port 8081. No paid hosting plan is used.
 
-Current endpoint: https://thehun-modem-weight-moving.trycloudflare.com/ask
+Current endpoint: https://heavily-investment-chose-computer.trycloudflare.com/ask
 
-Current website: https://thehun-modem-weight-moving.trycloudflare.com/
+Current website: https://heavily-investment-chose-computer.trycloudflare.com/
 
-Current API tester: https://thehun-modem-weight-moving.trycloudflare.com/docs
+Current API tester: https://heavily-investment-chose-computer.trycloudflare.com/docs
 
 Verified on 23 October 2026 IST: public `/health` returned HTTP 200 with `model_ready: true`. A POST through the public HTTPS address returned HTTP 200 in 16.56 seconds, comparing 20 place/hour combinations across five venues and declining to recommend unsuitable options. One venue timed out and was disclosed. This single warm-cache test is not a latency or uptime guarantee; it used the public route from this laptop, not an independent external test machine.
 

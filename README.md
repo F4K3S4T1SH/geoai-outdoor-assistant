@@ -2,9 +2,9 @@
 
 A browser frontend and HTTP API that compare outdoor places and times using a locally run Qwen2.5 1.5B model, live weather, air quality and OpenStreetMap evidence. Built for GeoAI Hackathon 2026 by **F4K3S4T1SH**.
 
-- Website: https://thehun-modem-weight-moving.trycloudflare.com/
-- Judging API: **POST** https://thehun-modem-weight-moving.trycloudflare.com/ask
-- API schema / tester: https://thehun-modem-weight-moving.trycloudflare.com/docs
+- Website: https://heavily-investment-chose-computer.trycloudflare.com/
+- Judging API: **POST** https://heavily-investment-chose-computer.trycloudflare.com/ask
+- API schema / tester: https://heavily-investment-chose-computer.trycloudflare.com/docs
 - Model and actual GGUF weights: https://huggingface.co/F4K3S4T1SH/geoai-outdoor-model
 - Source: https://github.com/F4K3S4T1SH/geoai-outdoor-assistant
 
