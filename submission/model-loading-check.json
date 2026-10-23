@@ -1,0 +1,14 @@
+{
+  "status": "passed",
+  "repo": "F4K3S4T1SH/geoai-outdoor-model",
+  "revision": "7472002f2b70dd6bdfcae14d2e684c199394269f",
+  "gguf_file": "qwen2.5-1.5b-instruct-q4_k_m.gguf",
+  "sha256": "6a1a2eb6d15622bf3c96857206351ba97e1af16c30d7a74ee38970e434e9407e",
+  "loader": "llama_cpp.Llama.from_pretrained",
+  "loader_version": "0.3.36",
+  "cache_note": "Public LFS SHA256 verified; identical official weights seeded in the local Hub cache to avoid downloading a duplicate.",
+  "architecture": "qwen2",
+  "smoke_response": "OK",
+  "seconds": 3.11,
+  "transformers_note": "The documented Transformers GGUF path was not executed: insufficient free memory to dequantize the full model. Quantized from_pretrained loading and generation were actually tested."
+}

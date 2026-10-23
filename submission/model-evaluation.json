@@ -1,0 +1,233 @@
+{
+  "kind": "live local SLM intent evaluation; no live venue/data test implied",
+  "passed": 10,
+  "total": 10,
+  "cases": [
+    {
+      "question": "A 45-minute jog tomorrow morning near Aundh",
+      "expected_activity": "running",
+      "passed": true,
+      "parsed": {
+        "activity": "running",
+        "location": "Aundh",
+        "radius_km": 10,
+        "start": "2026-10-24T06:00",
+        "end": "2026-10-24T10:00",
+        "profile": "general",
+        "clarification": null,
+        "mode": "leisure",
+        "destination": null,
+        "duration_minutes": 45,
+        "out_of_scope": false,
+        "hours": [
+          6,
+          10
+        ]
+      },
+      "seconds": 7.34
+    },
+    {
+      "question": "A leisure bicycle ride on Saturday near Powai",
+      "expected_activity": "cycling",
+      "passed": true,
+      "parsed": {
+        "activity": "cycling",
+        "location": "Powai",
+        "radius_km": 10,
+        "start": "2026-10-24T06:00",
+        "end": "2026-10-24T20:00",
+        "profile": "general",
+        "clarification": null,
+        "mode": "leisure",
+        "destination": null,
+        "duration_minutes": 60,
+        "out_of_scope": false,
+        "assumptions": [
+          "No part of day was specified; comparing 06:00\u201320:00 IST."
+        ]
+      },
+      "seconds": 7.64
+    },
+    {
+      "question": "Golf this weekend near Andheri",
+      "expected_activity": "golf",
+      "passed": true,
+      "parsed": {
+        "activity": "golf",
+        "location": "Andheri",
+        "radius_km": 10,
+        "start": "2026-10-24T06:00",
+        "end": "2026-10-25T20:00",
+        "profile": "general",
+        "clarification": null,
+        "mode": "leisure",
+        "destination": null,
+        "duration_minutes": 60,
+        "out_of_scope": false,
+        "assumptions": [
+          "No part of day was specified; comparing 06:00\u201320:00 IST."
+        ]
+      },
+      "seconds": 6.16
+    },
+    {
+      "question": "Cricket practice for kids tomorrow afternoon near Whitefield",
+      "expected_activity": "cricket",
+      "passed": true,
+      "parsed": {
+        "activity": "cricket",
+        "location": "Whitefield",
+        "radius_km": 10,
+        "start": "2026-10-24T12:00",
+        "end": "2026-10-24T16:00",
+        "profile": "child",
+        "clarification": null,
+        "mode": "leisure",
+        "destination": null,
+        "duration_minutes": 60,
+        "out_of_scope": false,
+        "hours": [
+          12,
+          16
+        ]
+      },
+      "seconds": 7.39
+    },
+    {
+      "question": "An outdoor five-a-side football game tomorrow near Pune",
+      "expected_activity": "football",
+      "passed": true,
+      "parsed": {
+        "activity": "football",
+        "location": "Pune",
+        "radius_km": 10,
+        "start": "2026-10-24T06:00",
+        "end": "2026-10-24T20:00",
+        "profile": "general",
+        "clarification": null,
+        "mode": "leisure",
+        "destination": "null",
+        "duration_minutes": 60,
+        "out_of_scope": false,
+        "assumptions": [
+          "No part of day was specified; comparing 06:00\u201320:00 IST."
+        ]
+      },
+      "seconds": 6.33
+    },
+    {
+      "question": "Outdoor tennis after work tomorrow near Hinjewadi",
+      "expected_activity": "tennis",
+      "passed": true,
+      "parsed": {
+        "activity": "tennis",
+        "location": "Hinjewadi",
+        "radius_km": 10,
+        "start": "2026-10-24T17:00",
+        "end": "2026-10-24T20:00",
+        "profile": "general",
+        "clarification": null,
+        "mode": "leisure",
+        "destination": null,
+        "duration_minutes": 60,
+        "out_of_scope": false,
+        "hours": [
+          17,
+          20
+        ]
+      },
+      "seconds": 7.97
+    },
+    {
+      "question": "A nature walk tomorrow morning near Lonavala",
+      "expected_activity": "hiking",
+      "passed": true,
+      "parsed": {
+        "activity": "hiking",
+        "location": "Lonavala",
+        "radius_km": 10,
+        "start": "2026-10-24T06:00",
+        "end": "2026-10-24T10:00",
+        "profile": "general",
+        "clarification": null,
+        "mode": "leisure",
+        "destination": null,
+        "duration_minutes": 60,
+        "out_of_scope": false,
+        "hours": [
+          6,
+          10
+        ]
+      },
+      "seconds": 6.91
+    },
+    {
+      "question": "A picnic with my family this weekend near Bengaluru",
+      "expected_activity": "picnic",
+      "passed": true,
+      "parsed": {
+        "activity": "picnic",
+        "location": "Bengaluru",
+        "radius_km": 10,
+        "start": "2026-10-24T06:00",
+        "end": "2026-10-25T20:00",
+        "profile": "general",
+        "clarification": null,
+        "mode": "leisure",
+        "destination": null,
+        "duration_minutes": 60,
+        "out_of_scope": false,
+        "assumptions": [
+          "No part of day was specified; comparing 06:00\u201320:00 IST."
+        ]
+      },
+      "seconds": 6.24
+    },
+    {
+      "question": "An outdoor birthday gathering tomorrow afternoon near Bandra",
+      "expected_activity": "event",
+      "passed": true,
+      "parsed": {
+        "activity": "event",
+        "location": "Bandra",
+        "radius_km": 10,
+        "start": "2026-10-24T12:00",
+        "end": "2026-10-24T16:00",
+        "profile": "general",
+        "clarification": null,
+        "mode": "leisure",
+        "destination": null,
+        "duration_minutes": 60,
+        "out_of_scope": false,
+        "hours": [
+          12,
+          16
+        ]
+      },
+      "seconds": 7.48
+    },
+    {
+      "question": "A sunset photo session today near Mumbai",
+      "expected_activity": "photography",
+      "passed": true,
+      "parsed": {
+        "activity": "photography",
+        "location": "Mumbai",
+        "radius_km": 10,
+        "start": "2026-10-23T06:00",
+        "end": "2026-10-23T20:00",
+        "profile": "general",
+        "clarification": null,
+        "mode": "leisure",
+        "destination": null,
+        "duration_minutes": 60,
+        "out_of_scope": false,
+        "assumptions": [
+          "No part of day was specified; comparing 06:00\u201320:00 IST."
+        ],
+        "sunset_only": true
+      },
+      "seconds": 6.11
+    }
+  ]
+}

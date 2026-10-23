@@ -4,6 +4,8 @@ The public connection forwards only the GeoAI HTTP application on localhost port
 
 Current endpoint: https://thehun-modem-weight-moving.trycloudflare.com/ask
 
+Current website: https://thehun-modem-weight-moving.trycloudflare.com/
+
 Current API tester: https://thehun-modem-weight-moving.trycloudflare.com/docs
 
 Verified on 23 October 2026 IST: public `/health` returned HTTP 200 with `model_ready: true`. A POST through the public HTTPS address returned HTTP 200 in 16.56 seconds, comparing 20 place/hour combinations across five venues and declining to recommend unsuitable options. One venue timed out and was disclosed. This single warm-cache test is not a latency or uptime guarantee; it used the public route from this laptop, not an independent external test machine.
@@ -30,7 +32,7 @@ Open the printed public URL plus `/health`; it should report `model_ready: true`
 {"question":"Where can I go running tomorrow morning within 5 km of Powai?","latitude":19.1176,"longitude":72.906}
 ```
 
-Coordinates are optional but help resolve neighbourhoods. Results use live source data and may correctly reject all options. Missing locations return clarification. When another request is running, the server returns HTTP 429 with Retry-After. Requests exceeding 85 seconds return HTTP 504. Individual venues get a 12-second evidence budget, and timed-out venues are disclosed rather than silently treated as suitable.
+Coordinates are optional but help resolve neighbourhoods. Results use live source data and may correctly reject all options. Missing locations return clarification. When another request is running, the server returns HTTP 429 with Retry-After. Requests exceeding 85 seconds return HTTP 504. Individual venues get a 10-second evidence budget, and timed-out venues are disclosed rather than silently treated as suitable.
 
 ## Stop
 

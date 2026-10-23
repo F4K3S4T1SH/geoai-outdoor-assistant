@@ -1,0 +1,8 @@
+# Optional verification only. Not needed by the running assistant.
+llama-cpp-python==0.3.36
+torch==2.6.0
+transformers==4.57.1
+accelerate>=1,<2
+gguf>=0.10
+sentencepiece
+protobuf

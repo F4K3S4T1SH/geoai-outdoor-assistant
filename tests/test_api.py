@@ -36,6 +36,8 @@ def test_grounded_recommendation_flow(monkeypatch):
     async def forecast(*args): return {'hourly':{'time':[t.replace(tzinfo=None).isoformat(timespec='minutes')], 'apparent_temperature':[25],'temperature_2m':[24],'precipitation_probability':[0],'wind_speed_10m':[5],'wind_direction_10m':[0],'weather_code':[0],'is_day':[1],'uv_index':[2]}},source
     async def air(*args): return {'hourly':{'time':[t.replace(tzinfo=None).isoformat(timespec='minutes')],'us_aqi':[30]}},source
     async def context(*args): return {'elements':[]},source
+    async def route(*args): raise SourceError('Routing unavailable in this fixture')
+    monkeypatch.setattr(module.data,'route',route)
     for name,fn in [('places',places),('forecast',forecast),('air',air),('context',context)]: monkeypatch.setattr(module.data,name,fn)
     monkeypatch.setattr(module.model,'extract',extract)
     async def choose(*args): return 0,{'us_aqi':30}

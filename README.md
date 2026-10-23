@@ -1,77 +1,75 @@
-# GeoAI Outdoor Assistant
+# Outside — GeoAI outdoor planner
 
-Project owner: `F4K3S4T1SH` on GitHub and Hugging Face.
+A browser frontend and HTTP API that compare outdoor places and times using a locally run Qwen2.5 1.5B model, live weather, air quality and OpenStreetMap evidence. Built for GeoAI Hackathon 2026 by **F4K3S4T1SH**.
 
+- Website: https://thehun-modem-weight-moving.trycloudflare.com/
+- Judging API: **POST** https://thehun-modem-weight-moving.trycloudflare.com/ask
+- API schema / tester: https://thehun-modem-weight-moving.trycloudflare.com/docs
+- Model and actual GGUF weights: https://huggingface.co/F4K3S4T1SH/geoai-outdoor-model
 - Source: https://github.com/F4K3S4T1SH/geoai-outdoor-assistant
-- Public model configuration: https://huggingface.co/F4K3S4T1SH/geoai-outdoor-model
-- Current public API: https://thehun-modem-weight-moving.trycloudflare.com/ask
-- Interactive API tester: https://thehun-modem-weight-moving.trycloudflare.com/docs
 
-This is a temporary laptop-hosted endpoint. It depends on the laptop and tunnel remaining online; its hostname changes if restarted. See [HOSTING.md](HOSTING.md) for start/stop instructions and judging preparation.
+The public address is temporary: the laptop and tunnel must remain running. A tunnel restart changes the hostname. See [HOSTING.md](HOSTING.md).
 
-Working prototype for GeoAI Hackathon 2026. Parses free-form questions with a locally run Qwen2.5 1.5B model, finds named OpenStreetMap venues, and ranks place/hour combinations using live forecast data and explicit geographic heuristics.
+## Use the website
 
-## Run on this Windows laptop
+Write a question, optionally choose an activity or profile, and confirm your neighbourhood from live place-search results. You can specify dates, duration, radius and a cycling commute destination. Dates use **Asia/Kolkata (IST)**. The result shows the chosen window, alternatives or reasons for declining, a map, preparation advice and timestamped source evidence. Unknown or ambiguous places are confirmed rather than silently guessed.
 
-The local Python environment, CPU runtime and model are set up by the development session. Run `./start.ps1` from PowerShell, then open http://127.0.0.1:8000/docs. The `/health` endpoint reports whether the model has loaded. Both services listen on the local machine only. Do not start the script a second time while the first instance is running.
+## Run locally
 
-POST `/ask`:
+Python 3.12+ is required. Create a virtual environment and install `requirements.txt`; add pytest for development. This laptop already has those dependencies.
+
+Runtime binaries and weights are intentionally excluded from Git:
+
+- Official llama.cpp **b11823**, Windows CPU x64 release: https://github.com/ggml-org/llama.cpp/releases/tag/b11823 . Extract into `runtime/llama/`.
+- `Qwen/Qwen2.5-1.5B-Instruct-GGUF`, revision `91cad51170dc346986eccefdc2dd33a9da36ead9`, file `qwen2.5-1.5b-instruct-q4_k_m.gguf`, in `models/`.
+- SHA256: `6a1a2eb6d15622bf3c96857206351ba97e1af16c30d7a74ee38970e434e9407e`.
+
+Run `./start.ps1`, then open http://127.0.0.1:8000/ . For public laptop hosting use `./start-public.ps1`; to stop public access use `./stop-public.ps1`. The model listens only on localhost port 8081; the public connection forwards the application on port 8000.
+
+## API example
 
 ```json
-{"question":"Where can I go running tomorrow morning near Powai?","latitude":19.1176,"longitude":72.9060}
+{"question":"Where can I run tomorrow morning within 5 km of Powai?","latitude":19.1176,"longitude":72.906}
 ```
 
-Coordinates are optional but recommended for neighbourhoods. The city geocoder may not resolve neighbourhood names; ambiguous matches return a clarification rather than guessing. Current date is resolved in Asia/Kolkata. Supply a time range within five days. `/activities` lists the ten supported activity categories.
+Optional confirmed fields: `activity`, `profile`, `location`, `radius_km`, `start`, `end`, `duration_minutes`, `mode`, `destination`, `destination_latitude`, `destination_longitude`, `max_travel_minutes`. Full schema is at `/docs`. Coordinates are optional. Search dates must be within the next five days. Missing details return a clarification; unsupported questions return an out-of-scope response. `/locations?q=...` searches places, `/activities` lists categories, and `/health` reports readiness.
 
-To recreate Python dependencies: Python 3.12+, `python -m venv .venv`, then `.venv/Scripts/python.exe -m pip install -r requirements.txt`. Development checks also require pytest.
+One question is processed at a time. Concurrent requests receive HTTP 429 / Retry-After. The overall budget is 85 seconds, with shorter evidence budgets per venue. A timeout never triggers canned weather or place answers.
 
-Runtime: official llama.cpp Windows CPU x64 release b11823, downloaded from https://github.com/ggml-org/llama.cpp/releases/tag/b11823 into `runtime/llama`. Model: official `Qwen/Qwen2.5-1.5B-Instruct-GGUF`, `qwen2.5-1.5b-instruct-q4_k_m.gguf` in `models/`. Base model: https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct (1.54B parameters, Apache 2.0). No fine-tuning. Model inference stays on localhost. No large hosted model is used by the running application.
+## Architecture and reasoning
 
-## Data and attribution
+Question → self-run SLM extracts intent → explicit dates, duration, profiles and confirmations are checked → live mapped candidates → hourly weather/AQI plus geographic context → full-duration suitability checks → SLM compares eligible candidates → verified evidence references and browser results.
 
-- OpenStreetMap through Overpass API: venues, roads, industry, water and green features. © OpenStreetMap contributors. https://www.openstreetmap.org/copyright
-- Open-Meteo forecast API: hourly weather and daylight. https://open-meteo.com/en/docs
-- CAMS through Open-Meteo air quality API: regional forecast US AQI, not a local sensor reading. https://open-meteo.com/en/docs/air-quality-api
-- GeoNames through Open-Meteo geocoding API. https://open-meteo.com/en/docs/geocoding-api
+Ten activity categories are implemented: running, cycling, golf, cricket, football, tennis, hiking/walking, picnic, event and photography. Cycling commutes require a confirmed destination and a verified bicycle route. Leisure cycling candidates require a route too. Travel times are road-network estimates, not live congestion estimates. Sunset requests use forecast sunset times, with a disclosed low-light photography window.
 
-Responses expose request parameters, fetch timestamps, cached status and actual values. Weather/AQI cache TTL is 15 minutes, map queries one hour, geocoding one day. Calls are serialized and spatial queries are bounded. Source outages are reported; no canned weather or venue data is substituted. Data remains subject to source licences and service limits; this prototype is for noncommercial hackathon use.
+Mapped road proximity, wind direction and weekday commute hours form a **traffic/exposure proxy**. Nearby water contributes edge/footing cautions and penalties; mapped greenery contributes a small preference bonus. These are transparent prototype rules, not pollution dispersion, flood, shade or medical models. Profiles and explicit ages tighten heuristic limits. Exact rules are in `geoai/ranking.py`; advice varies by activity and observed conditions.
 
-## Architecture
+## Data, attribution and service use
 
-Question → local SLM JSON extraction → validated place/time/profile → geocode → Overpass compatible venues → per-venue hourly weather/AQI and map context → deterministic eligibility checks and ranking → structured evidence, alternatives and precautions.
+- **© OpenStreetMap contributors** — venues and geography via Overpass; limited place-search fallback via Photon. https://www.openstreetmap.org/copyright
+- Photon / komoot — neighbourhood lookup and a bounded OSM venue fallback. https://github.com/komoot/photon
+- Open-Meteo — hourly forecast and sunrise/sunset. https://open-meteo.com/en/docs
+- CAMS via Open-Meteo — regional **US AQI** forecasts, not street-level sensor readings. https://open-meteo.com/en/docs/air-quality-api
+- GeoNames via Open-Meteo — geocoding fallback. https://open-meteo.com/en/docs/geocoding-api
+- Valhalla / FOSSGIS — live route requests using open OSM road data. https://valhalla.github.io/valhalla/api/
+- Browser map: Leaflet 1.9.4 and standard OSM tiles, with visible attribution. No bulk/offline tile downloading. https://operations.osmfoundation.org/policies/tiles/
 
-The model extracts intent, then compares a shortlist of eligible candidates and cites evidence keys. Code verifies its choice and renders actual values. Explicit relative dates and profile keywords are checked separately after extraction because CPU model testing exposed errors in both. Geography and weather calculations are explicit code. Heuristic thresholds are development assumptions, not medical guidance or scientifically validated safety limits.
+Weather/AQI cache TTL is 15 minutes; static Overpass map data and geocoding are cached up to 24 hours; routes and Photon venue searches one hour. Source calls are serialized per service, spatial queries are bounded, rate spacing and cooldowns are applied, and timestamps/cache status are returned. Missing geographic context prevents a positive recommendation, but available forecast evidence and the missing checks are shown. A sport inferred from a mapped venue name in the fallback is explicitly labelled and must be confirmed with the venue.
 
-## Known limitations and work remaining
+## Verified checks and limitations
 
-- A temporary laptop-hosted public endpoint is available; uptime depends on the laptop and Cloudflare Quick Tunnel.
-- Public team model configuration repository and model card are published. The original unchanged base model loads with upstream `from_pretrained`; the CPU runtime uses its official GGUF artifact.
-- Presentation and live demo package still need preparation.
-- No live traffic, route estimation, full activity duration checks or verified venue hours.
-- Candidate search compares at most five nearest compatible named mapped venues. OSM sport tagging and access coverage vary; cycling venues do not imply verified cycling routes.
-- Wind alignment is a crude proxy only; nearest mapped geometry vertices are used, not full line/polygon distances or a dispersion model.
-- Health profiles tighten heuristic limits. No guarantee of medical safety.
-- Response currently provides structured evidence and generic preparation advice rather than polished narrative.
-- Tests must be supplemented with varied live and adversarial model queries before submission.
+- **40 automated checks pass**, including all ten activity flows, two-hour windows with a thunderstorm in the second hour, geographic scoring, profiles, date normalization, missing data and timeouts. These use synthetic fixtures and do not prove coverage of every real venue.
+- A live local model evaluation classified **10/10** varied activity requests after normalization. See `submission/model-evaluation.json`; this small test set is not a general accuracy claim.
+- Public model LFS SHA256 verified. `llama_cpp.Llama.from_pretrained` loaded the submitted repository snapshot and generated `OK`; see `submission/model-loading-check.json`. The optional Transformers GGUF path is documented but was not run because full dequantization exceeded free memory.
+- Real venue, weather, AQI, geocoding and bicycle-route calls have succeeded. Public map APIs have also repeatedly timed out. The application reports missing evidence, not a fabricated recommendation.
+- The recorded Powai worked example rejected unsuitable options. `submission/live-example.json` is evidence of a historical run, never a runtime fallback. One public warm-cache request took 16.56 seconds; that is not a latency guarantee.
+- No live congestion feed, street-level AQI, verified venue hours, booking availability or ground inspection. Commutes sample weather/context near the route midpoint, not every metre. At most five compatible venues are assessed; time budgets may reduce that number, with omissions disclosed.
+- Laptop hosting has no uptime guarantee. Final submission and keeping the endpoint online through judging remain human responsibilities. See [COMPLIANCE.md](COMPLIANCE.md).
 
-## Verified development status — 23 October 2026 IST
+## Model, licences and development disclosure
 
-- Official GGUF downloaded and SHA256 verified against Hugging Face metadata.
-- Local CPU inference operational; initial extraction requests took approximately 3.5–4.7 seconds. An extraction plus candidate comparison took 6.95 seconds in a synthetic-candidate check.
-- Sixteen automated tests pass, including source failure, wind orientation, profile limits, relative dates, bounded request timeouts and a fixture-based recommendation flow.
-- Live weather, air quality and geocoding calls succeeded, although a later weather request timed out. Map requests initially failed but a later venue query succeeded.
-- A complete live development flow compared 20 place/hour combinations across five venues near Powai. It returned `avoid_or_insufficient_data`: forecast US AQI 161 exceeded the general-profile prototype limit; the earliest hour also failed the daylight check. One venue had unavailable data. Total latency was 201.59 seconds. This validates an evidence-based rejection, not a positive recommendation. The recorded result is in `submission/live-example.json` and is never used as a runtime fallback.
-- Local API and model health verified. Source and model configuration repositories are published. Laptop hosting uses an outbound Cloudflare Quick Tunnel; no router port forwarding is required.
-- A POST through the public HTTPS hostname returned HTTP 200 in 16.56 seconds with a grounded rejection across 20 place/hour combinations. This was one warm-cache check through the public route from the laptop, not an independent external-machine test. Cold source calls can take longer. Requests have an 85-second budget and per-venue evidence collection a 12-second budget; busy requests receive HTTP 429.
+Base model: **Qwen/Qwen2.5-1.5B-Instruct**, 1.54B parameters, open weights under Apache 2.0. No fine-tuning. Official Q4_K_M weights are redistributed unchanged in the public model repository with licence and attribution. The small model runs on the laptop; no large hosted model runs inside the assistant. The model card includes tested quantized `from_pretrained` instructions.
 
-## Disclosure
+OpenAI Codex helped write and test the code. Libraries/tools: FastAPI, Uvicorn, Pydantic, HTTPX, tzdata, llama.cpp, Hugging Face Hub, Leaflet, Cloudflare Tunnel and pytest. Optional loading checks use llama-cpp-python; the separate verification environment also installed PyTorch/Transformers. Frontend fonts: DM Sans and Manrope from Google Fonts. Application code is MIT; model and data licences remain separate.
 
-Built with OpenAI Codex as an AI coding assistant, with human direction and review. Runtime language model: Qwen2.5-1.5B-Instruct only. Open-source libraries: FastAPI, Uvicorn, HTTPX, Pydantic, tzdata, llama.cpp. Hugging Face Hub is used to download public weights; pytest is used in development.
-
-## Deployment preparation
-
-`Dockerfile` builds the pinned llama.cpp CPU server and serves FastAPI on port 7860. `deployment/serve.py` downloads pinned official weights, verifies SHA256, waits for local model readiness and supervises both processes. The image has not yet been built or tested; Docker is not installed on this development laptop.
-
-Hugging Face's current Spaces overview says Docker Spaces require a paid plan: https://huggingface.co/docs/hub/spaces-overview. No plan or hardware upgrade has been purchased. `deployment/publish_space.py` defaults to a dry run and requires `--publish` to upload. A laptop with a public tunnel is another hosting option, but it requires keeping the laptop awake and connected and verifying the endpoint throughout judging.
-
-Use browser/device authorization via `runtime/gh/bin/gh.exe auth login --web` and `.venv/Scripts/hf.exe auth login`. Never place tokens in the repository or chat. `deployment/publish_model.py` uploads only the reviewed model card and configuration after verifying the signed-in username.
+The six-slide presentation is `submission/outside-geoai-hackathon.pptx`. Docker hosting files are an optional, unverified deployment candidate, not the active hosting route. No paid plan has been purchased.
