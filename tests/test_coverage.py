@@ -13,7 +13,8 @@ from geoai.ranking import score,suitable
  ('event',{'leisure':'park'}),('photography',{'tourism':'viewpoint'})])
 @pytest.mark.parametrize('storm',[False,True])
 @pytest.mark.parametrize('context_missing',[False,True])
-def test_each_activity_can_complete_grounded_flow(monkeypatch,activity,tags,storm,context_missing):
+@pytest.mark.parametrize('profile',['general','asthma','senior','child','pregnancy'])
+def test_each_activity_can_complete_grounded_flow(monkeypatch,activity,tags,storm,context_missing,profile):
     now=datetime.now(module.TZ); t=(now+timedelta(hours=2)).replace(minute=0,second=0,microsecond=0)
     s={'url':'synthetic test fixture, not live data'}
     async def extract(*_): return {'activity':activity,'profile':'general','start':t.isoformat(),'end':(t+timedelta(hours=2)).isoformat()}
@@ -27,7 +28,7 @@ def test_each_activity_can_complete_grounded_flow(monkeypatch,activity,tags,stor
     async def choose(*_): return 0,{'us_aqi':30}
     monkeypatch.setattr(module.model,'extract',extract); monkeypatch.setattr(module.model,'choose',choose)
     for key,value in [('places',places),('forecast',weather),('air',air),('context',context),('route',route)]: monkeypatch.setattr(module.data,key,value)
-    r=TestClient(module.app).post('/ask',json={'question':'Compare outdoor conditions','latitude':19,'longitude':73,'duration_minutes':120})
+    r=TestClient(module.app).post('/ask',json={'question':'Compare outdoor conditions','latitude':19,'longitude':73,'duration_minutes':120,'profile':profile,'start':t.isoformat(),'end':(t+timedelta(hours=2)).isoformat()})
     assert r.status_code==200,r.text
     assert r.json()['status']==('avoid_or_insufficient_data' if storm or context_missing else 'recommendation'),r.json()
     assert r.json()['guidance']['prepare']

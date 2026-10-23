@@ -5,11 +5,29 @@ from datetime import datetime,timedelta,time
 
 def normalize(intent,question,now):
     out=dict(intent); text=question.lower()
+    numbers={'zero':0,'one':1,'two':2,'three':3,'four':4,'five':5,'six':6,'seven':7,'eight':8,'nine':9,'ten':10,'eleven':11,'twelve':12,'fifteen':15,'twenty':20,'thirty':30,'forty':40}
+    text=re.sub(r'\b('+'|'.join(numbers)+r')(?=\s*[- ]?\s*(?:kms?\b|kilomet(?:er|re)s?\b|hours?\b|hrs?\b|minutes?\b|mins?\b|am\b|pm\b))',lambda m:str(numbers[m[0]]),text)
     aliases={'walking':'hiking','walk':'hiking','nature_walk':'hiking','jogging':'running','jog':'running','soccer':'football','outdoor_event':'event','photography_session':'photography'}
     out['activity']=aliases.get(out.get('activity'),out.get('activity'))
-    if re.search(r'\b(?:birthday|wedding|gathering|fair)\b',text): out['activity']='event'
+    # Anchor unambiguous explicit activity words; the SLM handles the remaining
+    # free-form intent, while it cannot turn a plain walk into a run.
+    activity_words={'running':r'\b(?:run|running|jog|jogging)\b',
+        'cycling':r'\b(?:cycle|cycling|bike|biking|bicycle)\b',
+        'golf':r'\bgolf\b','cricket':r'\bcricket\b','football':r'\b(?:football|soccer|five-a-side)\b',
+        'tennis':r'\btennis\b','hiking':r'\b(?:walk|walking|hike|hiking|trek|trekking)\b',
+        'picnic':r'\bpicnic\b','photography':r'\b(?:photography|photos|photographs)\b'}
+    explicit=[activity for activity,pattern in activity_words.items() if re.search(pattern,text)]
+    if len(explicit)==1: out['activity']=explicit[0]
+    if re.search(r'\b(?:birthday\s+(?:party|gathering)|wedding|gathering|fair(?!\s+weather))\b',text): out['activity']='event'
     if re.search(r'\bnature walk\b',text): out['activity']='hiking'
     if isinstance(out.get('location'),str): out['location']=re.sub(r'^(?:near|around|in)\s+','',out['location'],flags=re.I)
+    placeholders={'work','home','my home','my work','office','here','nearby','current location','your location','not specified','unknown','n/a','explicit geographic place or null','destination place or null','work location','home location'}
+    for key in ('location','destination'):
+        if isinstance(out.get(key),str) and out[key].strip().lower() in placeholders: out[key]=None
+    if re.search(r'\b(?:write|implement|debug)\b.{0,50}\b(?:python|code|function|script|sql)\b',text) or (re.search(r'\b(?:indoor|indoors|cinema)\b',text) and not re.search(r'\boutdoor|\bnot indoors?\b',text)):
+        out['out_of_scope']=True
+    if re.search(r'\b(?:invent|fabricate|fake)\b.{0,60}\b(?:weather|forecast|aqi|temperature)\b|\b(?:weather|forecast|run|running|picnic)\b.{0,40}\b(?:mars|jupiter|saturn|the moon)\b',text):
+        out['out_of_scope']=True
     units=r'(?:kms?|kilomet(?:er|re)s?)'
     radius=re.search(r'\bwithin\s+(\d+(?:\.\d+)?)\s*'+units+r'\b',text)
     # Never let the model turn an exercise distance into a search radius.
@@ -30,28 +48,37 @@ def normalize(intent,question,now):
     if pace: out['pace_minutes_per_km']=float(pace[1])
     for k in ('location','start','end','clarification'):
         if out.get(k) in ('null','None','question or null','place name or null'): out[k]=None
+    profile_text=re.sub(r"\b(?:no|without|not|don't have|do not have)\s+(?:any\s+)?(?:asthma|asthmatic|pregnant|pregnancy|children|kids)\b",'',text)
+    for name,pattern in [('asthma',r'\basthma\b|\basthmatic\b'),('pregnancy',r'\bpregnan'),('child',r'\bkids?\b|\bchild(?:ren)?\b')]:
+        if re.search(pattern,text) and not re.search(pattern,profile_text) and out.get('profile')==name: out['profile']='general'
     for profile,pattern in [('asthma',r'\basthma\b|\basthmatic\b'),('pregnancy',r'\bpregnan'),
                             ('child',r'\bkids?\b|\bchild(?:ren)?\b'),('senior',r'\bseniors?\b|\belderly\b')]:
-        if re.search(pattern,text): out['profile']=profile; break
-    ages=[int(x) for x in re.findall(r'\b(\d{1,3})\s*(?:years? old|year-old|yrs? old)',text)]
+        if re.search(pattern,profile_text): out['profile']=profile; break
+    ages=[int(x) for x in re.findall(r'\b(\d{1,3})\s*[- ]?\s*(?:years?[- ]old|yrs?[- ]old)',text)]
     if ages:
         out['age']=ages[0]
+        out['invalid_age']=any(age>120 for age in ages)
         if out.get('profile') in (None,'general'):
             if min(ages)<16: out['profile']='child'
             elif max(ages)>=65: out['profile']='senior'
+    if re.search(r'\b(?:parents|mother|father|mum|mom|dad)\b',text) and not ages and not re.search(r'\b(?:senior|elderly|asthma|asthmatic|pregnan|child|kids)',profile_text):
+        out['profile']='general'; out['confirm_family_profile']=True
     if re.search(r'\bcommut|\bcycle to work|\bcycling to work',text): out['mode']='commute'
-    duration=re.search(r'\b(?:for\s+)?(one|two|three|four|half|\d+(?:\.\d+)?)\s*[- ]?\s*(hours?|hrs?|minutes?|mins?)\b(?!\s*(?:/|per)\s*km)',text)
+    travel=re.search(r'\b(?:travel|journey|drive)(?:\s+time)?\s+(?:under|within|up to|less than|no more than)\s+(\d+)\s*(?:minutes?|mins?)\b',text)
+    out['max_travel_minutes']=int(travel[1]) if travel else None
+    duration_text=text[:travel.start()]+text[travel.end():] if travel else text
+    duration=re.search(r'\b(?:for\s+)?(one|two|three|four|half|\d+(?:\.\d+)?)\s*[- ]?\s*(hours?|hrs?|minutes?|mins?)\b(?!\s*(?:/|per)\s*km)',duration_text)
     out['duration_explicit']=duration is not None
     if duration:
         number={'one':1,'two':2,'three':3,'four':4,'half':.5}.get(duration[1])
         if number is None: number=float(duration[1])
-        out['duration_minutes']=min(360,max(1,round(number*(60 if duration[2].startswith(('hour','hr')) else 1))))
+        out['duration_minutes']=round(number*(60 if duration[2].startswith(('hour','hr')) else 1))
     else: out['duration_minutes']=60
     if out['exercise_distance_km'] is not None and out['pace_minutes_per_km'] is not None and not out['duration_explicit']:
         out['duration_minutes']=math.ceil(out['exercise_distance_km']*out['pace_minutes_per_km'])
     day=None
     if re.search(r'\btomorrow\b',text): day=now.date()+timedelta(days=1)
-    elif re.search(r'\btoday\b|\btonight\b',text): day=now.date()
+    elif re.search(r'\btoday\b|\btonight\b|\bthis (?:morning|afternoon|evening)\b',text): day=now.date()
     elif 'weekend' not in text:
         weekdays=['monday','tuesday','wednesday','thursday','friday','saturday','sunday']
         for i,name in enumerate(weekdays):
@@ -59,6 +86,10 @@ def normalize(intent,question,now):
                 delta=(i-now.weekday())%7
                 if delta==0: delta=7
                 day=now.date()+timedelta(days=delta); break
+    absolute=re.search(r'\b(20\d{2}-\d{2}-\d{2})\b',text)
+    if absolute:
+        try: day=datetime.fromisoformat(absolute[1]).date()
+        except ValueError: out['start']=out['end']=None; out['invalid_date']=True
     end_day=day
     if 'this weekend' in text or ('saturday' in text and 'sunday' in text):
         delta=(5-now.weekday())%7
@@ -84,13 +115,25 @@ def normalize(intent,question,now):
         if not chosen and not explicit_clock:
             out['start']=datetime.combine(day,time(6)).isoformat(timespec='minutes')
             out['end']=datetime.combine(end_day or day,time(20)).isoformat(timespec='minutes')
-            out['assumptions']=['No part of day was specified; comparing 06:00–20:00 IST.']
+            out['assumptions']=['No part of day was specified; comparing 06:00â€“20:00 IST.']
         clocks=list(re.finditer(r'\b(\d{1,2})(?::(\d{2}))?\s*(am|pm)\b',text))
+        if not clocks:
+            clocks=list(re.finditer(r'\b([01]?\d|2[0-3]):([0-5]\d)(?!\s*(?:am|pm))\b',text))
+            clock24=True
+        else: clock24=False
         if clocks:
-            def clock(m): return time((int(m[1])%12)+(12 if m[3]=='pm' else 0),int(m[2] or 0))
+            def clock(m): return time(int(m[1]),int(m[2])) if clock24 else time((int(m[1])%12)+(12 if m[3]=='pm' else 0),int(m[2] or 0))
+            if not clock24 and any(not 1<=int(m[1])<=12 or int(m[2] or 0)>59 for m in clocks):
+                out['start']=out['end']=None
+                out['invalid_date']=True
+                return out
             start_dt=datetime.combine(day,clock(clocks[0])); duration=out.get('duration_minutes') or 60
             out['start']=start_dt.isoformat(timespec='minutes')
-            out['end']=(datetime.combine(end_day or day,clock(clocks[1])) if len(clocks)>1 else start_dt+timedelta(minutes=duration)).isoformat(timespec='minutes')
+            end_dt=datetime.combine(end_day or day,clock(clocks[1])) if len(clocks)>1 else start_dt+timedelta(minutes=duration)
+            if end_dt<=start_dt: end_dt+=timedelta(days=1)
+            out['end']=end_dt.isoformat(timespec='minutes')
             out.pop('hours',None)
+    if day is None and not re.search(r'\b(?:in \d+ hours?|next week|next weekend)\b',text):
+        out['start']=None; out['end']=None
     if 'sunset' in text: out['sunset_only']=True
     return out

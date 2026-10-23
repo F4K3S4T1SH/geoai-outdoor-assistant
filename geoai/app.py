@@ -10,10 +10,10 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel,Field
 from . import data,model
 from .intent import normalize
-from .ranking import ACTIVITIES,suitable,context_features,score
+from .ranking import ACTIVITIES,suitable,context_features,score,valid_number
 from .advice import advice_for
 
-app=FastAPI(title='GeoAI Outdoor Assistant',version='0.3.0')
+app=FastAPI(title='GeoAI Outdoor Assistant',version='0.4.0')
 TZ=ZoneInfo('Asia/Kolkata'); GATE=asyncio.Semaphore(1)
 STATIC=Path(__file__).resolve().parent/'static'
 STATIC.mkdir(exist_ok=True)
@@ -50,8 +50,11 @@ async def health():
     try:
         async with httpx.AsyncClient(timeout=3) as c: r=await c.get('http://127.0.0.1:8081/health')
         ready=r.status_code==200
-    except httpx.HTTPError: ready=False
-    return {'api':'ok','model_ready':ready,'model':model.MODEL,'version':'0.3.0'}
+        if ready:
+            async with httpx.AsyncClient(timeout=3) as c: names=await c.get('http://127.0.0.1:8081/v1/models')
+            ready=names.status_code==200 and any(m.get('id')==model.MODEL for m in names.json().get('data',[]))
+    except (httpx.HTTPError,ValueError,AttributeError,TypeError): ready=False
+    return {'api':'ok','model_ready':ready,'model':model.MODEL,'version':'0.4.0'}
 
 @app.get('/activities')
 def activities(): return list(ACTIVITIES)
@@ -72,6 +75,7 @@ async def ask(q:Query):
             async with asyncio.timeout(85): return await recommend(q)
         except TimeoutError: raise HTTPException(504,detail='Live data collection exceeded the request time limit. Please retry; no results were invented.')
         except data.SourceError as e: raise HTTPException(503,detail={'status':'source_unavailable','message':str(e)})
+        except model.ModelError as e: return clarify('The small model could not finish understanding this request. Please select the activity, place and dates in the form and retry.',field='model')
         except httpx.HTTPError as e: raise HTTPException(503,detail='The local small model is unavailable or timed out.') from e
         except (ValueError,KeyError,TypeError) as e: raise HTTPException(422,detail='Please confirm the activity, place and dates using the form.') from e
     finally: GATE.release()
@@ -87,13 +91,17 @@ async def venue_evidence(place):
     results=await asyncio.gather(data.forecast(place['lat'],place['lon']),data.air(place['lat'],place['lon']),data.context(place['lat'],place['lon']),return_exceptions=True)
     if isinstance(results[0],Exception): raise data.SourceError('Required weather unavailable')
     weather,ws=results[0]; sources=[ws]; failures=[]
+    h=weather.get('hourly',{})
+    if not isinstance(h.get('time'),list) or not h['time'] or any(not isinstance(v,list) or len(v)!=len(h['time']) for v in h.values()): raise data.SourceError('Weather source returned an incomplete hourly series')
+    for key,values in h.items():
+        if key!='time': h[key]=[v if valid_number(v) else None for v in values]
     if isinstance(results[2],Exception):
         ctx={'elements':[],'context_available':False}; failures.append('Geographic context unavailable for '+place['name']+'; no positive recommendation can be made')
     else:
         ctx,cs=results[2]; sources.append(cs)
     if isinstance(results[1],Exception): aqmap={}; failures.append('Air quality unavailable for '+place['name'])
     else:
-        aq,aas=results[1]; sources.append(aas); aqmap=dict(zip(aq['hourly']['time'],aq['hourly']['us_aqi']))
+        aq,aas=results[1]; sources.append(aas); aqmap={t:(v if valid_number(v,0,500) else None) for t,v in zip(aq.get('hourly',{}).get('time',[]),aq.get('hourly',{}).get('us_aqi',[]))}
     return weather,aqmap,ctx,sources,failures
 
 async def route_evidence(origin,place,activity):
@@ -102,16 +110,19 @@ async def route_evidence(origin,place,activity):
 
 async def recommend(q):
     begun=time.monotonic(); now=datetime.now(TZ); intent=normalize(await model.extract(q.question,now.isoformat()),q.question,now)
-    for key in ('activity','profile','radius_km','location','duration_minutes','destination','mode','exercise_distance_km','pace_minutes_per_km','venue_scope'):
+    for key in ('activity','profile','radius_km','location','duration_minutes','destination','mode','exercise_distance_km','pace_minutes_per_km','venue_scope','max_travel_minutes'):
         value=getattr(q,key)
         if value is not None: intent[key]=value
     if q.start is not None: intent['start']=local(q.start).isoformat(); intent.pop('hours',None); intent.pop('sunset_only',None)
     if q.end is not None: intent['end']=local(q.end).isoformat()
-    if intent.get('out_of_scope') is True and q.activity is None: return {'status':'out_of_scope','message':'I can help compare outdoor places and times. Choose an outdoor activity to begin.','supported_activities':list(ACTIVITIES)}
+    if intent.get('out_of_scope') is True and q.activity is not None: return clarify('Your question describes an unsupported task or indoor activity. Please edit it to describe the outdoor activity selected in the form.',intent,field='activity')
+    if intent.get('out_of_scope') is True: return {'status':'out_of_scope','message':'I can help compare outdoor places and times. Choose an outdoor activity to begin.','supported_activities':list(ACTIVITIES)}
     activity=intent.get('activity'); profile=intent.get('profile','general'); location=intent.get('location')
     if activity not in ACTIVITIES: return clarify('Which outdoor activity would you like to do?',intent,supported_activities=list(ACTIVITIES))
     if profile not in ('general','asthma','senior','child','pregnancy'): return clarify('Please confirm a personal profile in the form.',intent)
     if (q.latitude is None)!=(q.longitude is None): return clarify('Please provide both latitude and longitude.',intent)
+    if intent.get('invalid_age'): return clarify('Please confirm the age; use a value from 0 to 120.',intent,field='profile')
+    if intent.get('confirm_family_profile') and q.profile is None: return clarify('What age group or health considerations apply to your parents/family? Select a profile, or state their ages; I will not assume they are seniors.',intent,field='profile')
     distance=intent.get('exercise_distance_km')
     if activity=='cycling' and intent.get('mode')=='commute' and (distance is not None or intent.get('venue_scope')=='exact'):
         return clarify('A commute assesses a route to a destination. For a distance target inside one venue, choose a leisure ride; for a commute, choose nearby places and clear the exercise-distance target.',intent,field='exercise_distance_km')
@@ -151,8 +162,10 @@ async def recommend(q):
     if end<=start or end>now+timedelta(days=5): return clarify('Choose a future interval within the next five days.',intent,field='time')
     radius=float(intent.get('radius_km') or 10)
     if not math.isfinite(radius) or not 0<radius<=40: return clarify('Choose a search radius from 1 to 40 km.',intent)
-    duration=int(intent.get('duration_minutes') or 60)
+    duration=int(intent.get('duration_minutes') if intent.get('duration_minutes') is not None else 60)
     if not 1<=duration<=360: return clarify('Choose a duration from one minute to six hours.',intent)
+    if intent.get('max_travel_minutes') is not None and not 5<=intent['max_travel_minutes']<=180:
+        return clarify('Choose a travel-time budget from five minutes to three hours.',intent,field='max_travel_minutes')
     if (end-start).total_seconds()<duration*60: return clarify('Widen the time range to fit the full activity duration.',intent,field='time')
     commute=activity=='cycling' and intent.get('mode')=='commute'
     if commute:
@@ -170,7 +183,7 @@ async def recommend(q):
         venues=[selected_venue]
     else:
         found,src=await data.places(lat,lon,radius,activity); sources.append(src); venues=[p for p in found if suitable(p,activity)][:5]
-    if not venues: return {'status':'no_verified_venues','message':'No compatible outdoor venues were found in this live map query. Try another place or a wider radius.','sources':sources,'request':intent}
+    if not venues: return {'status':'no_verified_venues','message':'No compatible outdoor venues were verified in the available live map coverage. Source limitations may hide valid venues; inspect the evidence or try another area.','sources':sources,'request':intent}
     options=[]; failures=[]; evaluated=set(); complete=set()
     for venue_index,place in enumerate(venues):
         budget=72-(time.monotonic()-begun)
@@ -205,6 +218,7 @@ async def recommend(q):
                     w={k:v[j] for k,v in h.items() if k!='time'}; features=context_features(place,ctx.get('elements',[]),w.get('wind_direction_10m'))
                     if j==i: first_features=features
                     value,b,r=score(activity,profile,w,aqmap.get(h['time'][j]),features,place,times[j],route)
+                    if ctx.get('coverage_note'): r.append(ctx['coverage_note'])
                     if intent.get('sunset_only') and activity=='photography':
                         b=[reason for reason in b if reason!='Daylight required; venue lighting unverified']
                         r.append('Window uses the forecast sunset; the final part may be in low light. Check footing and the return route.')
@@ -216,12 +230,13 @@ async def recommend(q):
                 if rise and sunset and not verified_lights and not (intent.get('sunset_only') and activity=='photography'):
                     if dt<local(datetime.fromisoformat(rise)) or dt+timedelta(minutes=duration)>local(datetime.fromisoformat(sunset)):
                         blocks.append('The full activity window extends outside forecast daylight; venue lighting is unverified')
-                if q.max_travel_minutes and route and route['duration_minutes']>q.max_travel_minutes: blocks.append('Route exceeds your travel-time budget')
+                if intent.get('max_travel_minutes') and route and route['duration_minutes']>intent['max_travel_minutes']: blocks.append('Route exceeds your travel-time budget')
                 missing=[]
+                if intent.get('max_travel_minutes') and not commute and selected_venue is None and route is None: missing.append('Travel-time budget could not be verified because routing is unavailable')
                 if ctx.get('context_available') is False: missing.append('Nearby roads, industry, water and greenery could not be checked')
                 if any(sample['us_aqi'] is None for sample in samples): missing.append('Air-quality forecast is missing for part of the activity')
                 if len(samples)!=steps or any(v is None for v in values): missing.append('Weather forecast is incomplete for part of the activity')
-                if any(sample['weather'].get('wind_direction_10m') is None for sample in samples): missing.append('Wind direction is missing; upwind exposure could not be checked')
+                if any(not valid_number(sample['weather'].get('wind_direction_10m'),0,360) for sample in samples): missing.append('Wind direction is missing; upwind exposure could not be checked')
                 conditions=[b for b in dict.fromkeys(blocks) if not any(x in b for x in ('unavailable','incomplete','could not be completed'))]
                 blocks.extend(missing)
                 if not missing: complete.add(place.get('id',place['name']))

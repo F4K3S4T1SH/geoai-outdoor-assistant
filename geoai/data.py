@@ -63,7 +63,15 @@ async def fetch(url, params, ttl=900, post=False):
                 LAST_CALL[url]=time.monotonic()
             timeout=httpx.Timeout(28 if post else 12, connect=4)
             async with httpx.AsyncClient(timeout=timeout, headers={'User-Agent': 'GeoAIHackathonPrototype/0.2'}) as c:
-                r = await (c.post(url, data=params) if post else c.get(url, params=params))
+                for attempt in range(2):
+                    try:
+                        r = await (c.post(url, data=params) if post else c.get(url, params=params))
+                        break
+                    except (httpx.ConnectTimeout,httpx.ConnectError):
+                        if attempt or 'open-meteo.com/' not in url: raise
+                        # One bounded reconnect for transient weather/AQI handshakes.
+                        # HTTP errors/rate limits and read timeouts are not retried.
+                        await asyncio.sleep(.2)
                 r.raise_for_status()
                 data = parse_osm_context(r.text) if url=='https://api.openstreetmap.org/api/0.6/map' else r.json()
                 if isinstance(data,dict) and data.get('remark'): raise SourceError('Map service returned incomplete data')
@@ -150,7 +158,7 @@ async def places(lat,lon,radius,activity=None):
             if any(suitable(p,activity or 'picnic') for p in fallback): return fallback,source
         except SourceError: pass
         data,source=await map_extract(lat,lon)
-        source['coverage_note']='Venue fallback checked a small map extract about 1 km around the search centre, not the entire requested radius.'
+        source['coverage_note']='Venue fallback checked only the bounded map extract around the search centre, not the entire requested radius. '+source.get('coverage_note','Coverage is about 1 km around the search centre; enclosing polygons and unmapped features may be absent.')
     found=[]
     for e in data.get('elements',[]):
         t=e.get('tags',{}); p=e.get('center',e)
@@ -193,19 +201,32 @@ async def photon_places(lat,lon,radius,activity):
     source['note']='Live Photon / OpenStreetMap fallback after Overpass outage; limited venue metadata'
     return sorted(found,key=lambda p:p['distance_km']),source
 
-def extract_bbox(lat,lon):
-    dy=1.05/111; dx=dy/max(.1,math.cos(math.radians(lat)))
+def extract_bbox(lat,lon,radius_km=1.05):
+    dy=radius_km/111; dx=dy/max(.1,math.cos(math.radians(lat)))
     return f'{max(-180,lon-dx):.6f},{max(-90,lat-dy):.6f},{min(180,lon+dx):.6f},{min(90,lat+dy):.6f}'
 
 async def map_extract(lat,lon):
-    result,source=await asyncio.wait_for(fetch('https://api.openstreetmap.org/api/0.6/map',{'bbox':extract_bbox(lat,lon)},ttl=86400),timeout=8)
+    try:
+        result,source=await asyncio.wait_for(fetch('https://api.openstreetmap.org/api/0.6/map',{'bbox':extract_bbox(lat,lon)},ttl=86400),timeout=8)
+    except SourceError as exc:
+        if ': 400' not in str(exc): raise
+        # Dense city extracts can exceed OSM's 50,000-node cap. One smaller
+        # read is bounded, cached and explicitly disclosed, never bulk tiled.
+        result,source=await asyncio.wait_for(fetch('https://api.openstreetmap.org/api/0.6/map',{'bbox':extract_bbox(lat,lon,.5)},ttl=86400),timeout=8)
+        result=dict(result,coverage_note='Dense-area fallback covers about 500 m around this point. Features outside that extract and enclosing polygons may be absent.')
+        source=dict(source,coverage_note=result['coverage_note'])
     source['note']='Small OSM map extract fallback after map-search outage; map coverage is not a guarantee of feature absence.'
     return result,source
 
 async def context(lat,lon):
     cached=read_cache('https://api.openstreetmap.org/api/0.6/map',{'bbox':extract_bbox(lat,lon)},86400)
     if cached: return cached
-    q=f'''[out:json][timeout:20];(way(around:700,{lat},{lon})[highway~"^(motorway|trunk|primary)$"];nwr(around:1000,{lat},{lon})[landuse="industrial"];nwr(around:500,{lat},{lon})[natural="water"];nwr(around:500,{lat},{lon})[landuse~"^(forest|grass)$"];);out center tags geom;'''
+    small=read_cache('https://api.openstreetmap.org/api/0.6/map',{'bbox':extract_bbox(lat,lon,.5)},86400)
+    if small:
+        result,source=small
+        note='Dense-area fallback covers about 500 m around this point. Features outside that extract and enclosing polygons may be absent.'
+        return dict(result,coverage_note=note),dict(source,coverage_note=note)
+    q=f'''[out:json][timeout:20];(way(around:700,{lat},{lon})[highway~"^(motorway|trunk|primary)$"];nwr(around:1000,{lat},{lon})[landuse="industrial"];nwr(around:500,{lat},{lon})[natural~"^(water|wood)$"];nwr(around:500,{lat},{lon})[landuse~"^(forest|grass)$"];nwr(around:500,{lat},{lon})[leisure~"^(park|garden)$"];);out center tags geom;'''
     try:
         return await asyncio.wait_for(overpass(q,budget=2.7),timeout=4)
     except (SourceError,TimeoutError):

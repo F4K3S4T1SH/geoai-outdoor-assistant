@@ -1,0 +1,7 @@
+{
+  "method": "Sum of logical GGUF tensor dimensions, with tied embedding weights stored once",
+  "tensor_count": 362,
+  "parameter_count": 2533539840,
+  "limit": 3000000000,
+  "within_limit": true
+}

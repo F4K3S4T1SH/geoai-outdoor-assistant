@@ -1,14 +1,15 @@
 {
   "status": "passed",
   "repo": "F4K3S4T1SH/geoai-outdoor-model",
-  "revision": "7472002f2b70dd6bdfcae14d2e684c199394269f",
-  "gguf_file": "qwen2.5-1.5b-instruct-q4_k_m.gguf",
-  "sha256": "6a1a2eb6d15622bf3c96857206351ba97e1af16c30d7a74ee38970e434e9407e",
+  "revision": "565b78d00f7198c84c3aa8f616a4f2ce06422ff9",
+  "gguf_file": "granite-3.3-2b-instruct-Q4_K_M.gguf",
+  "sha256": "ac71e9e32c0bea919b409c5918f69ca74339854b0319c5065e4e9fb6d95c4852",
   "loader": "llama_cpp.Llama.from_pretrained",
   "loader_version": "0.3.36",
   "cache_note": "Public LFS SHA256 verified; identical official weights seeded in the local Hub cache to avoid downloading a duplicate.",
-  "architecture": "qwen2",
-  "smoke_response": "OK",
-  "seconds": 3.11,
-  "transformers_note": "The documented Transformers GGUF path was not executed: insufficient free memory to dequantize the full model. Quantized from_pretrained loading and generation were actually tested."
+  "architecture": "granite",
+  "smoke_response": "OK.",
+  "seconds": 4.47,
+  "transformers_note": "Not tested for this Granite artifact. Submitted loader verification uses quantized llama_cpp.Llama.from_pretrained.",
+  "smoke_context_length": 512
 }

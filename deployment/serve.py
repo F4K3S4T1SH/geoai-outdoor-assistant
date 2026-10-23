@@ -1,5 +1,6 @@
 """Run the API and local CPU model together, with orderly process shutdown."""
 import hashlib
+import json
 import os
 from pathlib import Path
 import signal
@@ -10,20 +11,24 @@ import urllib.request
 
 ROOT=Path(__file__).resolve().parents[1]
 os.chdir(ROOT)
-MODEL=ROOT/'models/qwen2.5-1.5b-instruct-q4_k_m.gguf'
-EXPECTED='6a1a2eb6d15622bf3c96857206351ba97e1af16c30d7a74ee38970e434e9407e'
+CONFIG=json.loads((ROOT/'submission/runtime_config.json').read_text(encoding='utf-8'))
+if not 0<CONFIG['parameter_count']<=3_000_000_000:
+    raise RuntimeError('Model must satisfy the rulebook parameter limit')
+MODEL=ROOT/'models'/CONFIG['gguf_file']
+EXPECTED=CONFIG['sha256']
 
 def main():
     if not MODEL.exists():
         from huggingface_hub import hf_hub_download
-        hf_hub_download('Qwen/Qwen2.5-1.5B-Instruct-GGUF',MODEL.name,
-                        revision='91cad51170dc346986eccefdc2dd33a9da36ead9',local_dir=MODEL.parent)
+        hf_hub_download(CONFIG['gguf_repo'],MODEL.name,
+                        revision=CONFIG['gguf_revision'],local_dir=MODEL.parent)
     with MODEL.open('rb') as f:
         digest=hashlib.file_digest(f,'sha256').hexdigest()
     if digest!=EXPECTED: raise RuntimeError('Model checksum does not match official artifact')
     binary=os.environ.get('LLAMA_SERVER','llama-server')
     model=subprocess.Popen([binary,'-m',str(MODEL),'--host','127.0.0.1','--port','8081',
-        '-c','4096','-t',os.environ.get('MODEL_THREADS','2'),'--parallel','1'])
+        '-c',str(CONFIG['context_length']),'-t',os.environ.get('MODEL_THREADS','2'),'--parallel','1',
+        '--alias',CONFIG['base_model'].split('/')[-1],'--reasoning','off','--reasoning-budget','0'])
     api=None
     def stop(*_):
         for p in (api,model):

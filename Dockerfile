@@ -12,6 +12,7 @@ COPY requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt huggingface_hub
 COPY --chown=app:app geoai /app/geoai
 COPY --chown=app:app deployment /app/deployment
+COPY --chown=app:app submission/runtime_config.json /app/submission/runtime_config.json
 RUN mkdir -p /app/models /app/work && chown -R app:app /app
 USER app
 ENV HOME=/home/app PYTHONUNBUFFERED=1

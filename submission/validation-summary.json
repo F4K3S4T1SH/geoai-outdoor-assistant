@@ -1,0 +1,181 @@
+{
+  "recorded_at": "2026-10-23T21:16:34.630131+05:30",
+  "public_url": "https://sewing-chef-mitsubishi-picked.trycloudflare.com",
+  "cases": [
+    {
+      "case": "running",
+      "http_status": 200,
+      "seconds": 60.78,
+      "status": "recommendation"
+    },
+    {
+      "case": "cycling",
+      "http_status": 200,
+      "seconds": 55.42,
+      "status": "recommendation"
+    },
+    {
+      "case": "golf",
+      "http_status": 200,
+      "seconds": 27.12,
+      "status": "no_verified_venues"
+    },
+    {
+      "case": "cricket",
+      "http_status": 200,
+      "seconds": 20.09,
+      "status": "avoid_or_insufficient_data"
+    },
+    {
+      "case": "football",
+      "http_status": 200,
+      "seconds": 75.55,
+      "status": "recommendation"
+    },
+    {
+      "case": "tennis",
+      "http_status": 200,
+      "seconds": 63.64,
+      "status": "recommendation"
+    },
+    {
+      "case": "hiking",
+      "http_status": 200,
+      "seconds": 61.11,
+      "status": "recommendation"
+    },
+    {
+      "case": "picnic",
+      "http_status": 200,
+      "seconds": 43.98,
+      "status": "recommendation"
+    },
+    {
+      "case": "event",
+      "http_status": 200,
+      "seconds": 47.14,
+      "status": "recommendation"
+    },
+    {
+      "case": "photography",
+      "http_status": 200,
+      "seconds": 44.25,
+      "status": "recommendation"
+    },
+    {
+      "case": "missing-place",
+      "http_status": 200,
+      "seconds": 13.06,
+      "status": "clarification_needed"
+    },
+    {
+      "case": "missing-time",
+      "http_status": 200,
+      "seconds": 11.77,
+      "status": "clarification_needed"
+    },
+    {
+      "case": "missing-commute",
+      "http_status": 200,
+      "seconds": 10.5,
+      "status": "clarification_needed"
+    },
+    {
+      "case": "unsupported-coding",
+      "http_status": 200,
+      "seconds": 11.05,
+      "status": "out_of_scope"
+    },
+    {
+      "case": "indoor-tennis",
+      "http_status": 200,
+      "seconds": 13.09,
+      "status": "out_of_scope"
+    },
+    {
+      "case": "fabrication-injection",
+      "http_status": 200,
+      "seconds": 13.34,
+      "status": "out_of_scope"
+    },
+    {
+      "case": "distance-needs-duration",
+      "http_status": 200,
+      "seconds": 14.0,
+      "status": "clarification_needed"
+    },
+    {
+      "case": "parents-profile",
+      "http_status": 200,
+      "seconds": 12.83,
+      "status": "clarification_needed"
+    },
+    {
+      "case": "invalid-zero-duration",
+      "http_status": 200,
+      "seconds": 13.11,
+      "status": "clarification_needed"
+    }
+  ],
+  "all_19_contract_checks_passed": true,
+  "concurrency": {
+    "http_status": 429,
+    "retry_after": "10",
+    "response": {
+      "detail": "The laptop is answering another question. Please retry shortly."
+    }
+  },
+  "recovery": {
+    "api_restart_recovered": true,
+    "seconds": 3.22,
+    "health": {
+      "api": "ok",
+      "model_ready": true,
+      "model": "granite-3.3-2b-instruct",
+      "version": "0.4.0"
+    },
+    "public_url": "https://sewing-chef-mitsubishi-picked.trycloudflare.com",
+    "model_restart_recovered": true,
+    "model_recovery_seconds": 2.41
+  },
+  "automated_tests": 935,
+  "real_model_extraction_cases": 34,
+  "passed_real_model_extraction_cases": 34,
+  "note": "Test fixtures are synthetic and not runtime answers. Live API cases use fetched/cached public source evidence. Not exhaustive input or geographic coverage.",
+  "final_regressions": [
+    {
+      "case": "exact-bharathi-10km",
+      "http_status": 200,
+      "status": "avoid_or_insufficient_data",
+      "seconds": 27.78
+    },
+    {
+      "case": "confirmed-golf",
+      "http_status": 200,
+      "status": "recommendation",
+      "seconds": 28.75
+    },
+    {
+      "case": "confirmed-cricket",
+      "http_status": 200,
+      "status": "recommendation",
+      "seconds": 36.84
+    },
+    {
+      "case": "verified-commute",
+      "http_status": 200,
+      "status": "avoid_or_insufficient_data",
+      "seconds": 30.12
+    }
+  ],
+  "browser_flow": {
+    "status": "recommendation",
+    "best_place": "Cubbon Park",
+    "start": "2026-10-24T07:00:00+05:30",
+    "options_compared": 20,
+    "console_errors": 0,
+    "desktop_width": 1280,
+    "phone_width": 390,
+    "horizontal_overflow_observed": false
+  }
+}

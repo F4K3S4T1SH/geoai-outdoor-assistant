@@ -24,7 +24,7 @@ def test_live_source_failure_is_not_fabricated(monkeypatch):
     async def fail(*args): raise SourceError('Map provider unavailable')
     monkeypatch.setattr(module.model,'extract',extract)
     monkeypatch.setattr(module.data,'places',fail)
-    r=TestClient(module.app).post('/ask',json={'question':'Compare running conditions','latitude':19,'longitude':73})
+    r=TestClient(module.app).post('/ask',json={'question':'Compare running conditions','latitude':19,'longitude':73,'start':(now+timedelta(hours=1)).isoformat(),'end':(now+timedelta(hours=4)).isoformat()})
     assert r.status_code==503
     assert r.json()['detail']['status']=='source_unavailable'
 
@@ -44,7 +44,7 @@ def test_grounded_recommendation_flow(monkeypatch,wind_missing):
     monkeypatch.setattr(module.model,'extract',extract)
     async def choose(*args): return 0,{'us_aqi':30}
     monkeypatch.setattr(module.model,'choose',choose)
-    r=TestClient(module.app).post('/ask',json={'question':'Compare running conditions','latitude':19,'longitude':73})
+    r=TestClient(module.app).post('/ask',json={'question':'Compare running conditions','latitude':19,'longitude':73,'start':(t-timedelta(hours=1)).isoformat(),'end':(t+timedelta(hours=1)).isoformat()})
     result=r.json()
     assert result['status']==('avoid_or_insufficient_data' if wind_missing else 'recommendation')
     if wind_missing:

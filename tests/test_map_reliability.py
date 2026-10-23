@@ -63,3 +63,15 @@ def test_context_does_not_mistake_paths_or_sports_pitches_for_roads_or_greenery(
     from geoai.ranking import context_features
     elements=[{'type':'way','id':i,'tags':tags,'geometry':[{'lat':11.4,'lon':76.7}]} for i,tags in enumerate([{'highway':'path'},{'leisure':'pitch'},{'leisure':'park'}])]
     assert [f['kind'] for f in context_features({'lat':11.4,'lon':76.7},elements,0)]==['green_cover']
+
+def test_dense_map_extract_retries_once_at_smaller_disclosed_extent(monkeypatch):
+    calls=[]
+    async def fetch(url,params,**kwargs):
+        calls.append(params['bbox'])
+        if len(calls)==1: raise data.SourceError(url+': 400')
+        return {'elements':[],'context_available':True},{'url':url}
+    monkeypatch.setattr(data,'fetch',fetch)
+    result,source=asyncio.run(data.map_extract(11.93,79.83))
+    assert len(calls)==2
+    assert '500 m' in result['coverage_note']
+    assert source['coverage_note']==result['coverage_note']

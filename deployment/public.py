@@ -23,7 +23,10 @@ def ready(url,model=False):
 def main():
     os.chdir(ROOT); WORK.mkdir(exist_ok=True)
     tunnel=ROOT/'runtime/cloudflared/cloudflared.exe'
-    weights=ROOT/'models/qwen2.5-1.5b-instruct-q4_k_m.gguf'
+    config=json.loads((ROOT/'submission/runtime_config.json').read_text(encoding='utf-8'))
+    if config['parameter_count']>3_000_000_000: raise RuntimeError('Model exceeds rulebook size limit')
+    weights=ROOT/'models'/config['gguf_file']
+    model_name=config['base_model'].split('/')[-1]
     llama=ROOT/'runtime/llama/llama-server.exe'
     if not all(p.exists() for p in (tunnel,weights,llama)):
         raise RuntimeError('Local tunnel runtime, model runtime or weights are missing. See README.')
@@ -35,14 +38,19 @@ def main():
             p=subprocess.Popen(cmd,cwd=ROOT,stdout=f,stderr=subprocess.STDOUT,creationflags=creationflags)
             own.append(p); return p
         try:
+            model_proc=None; api_proc=None
+            if ready('http://127.0.0.1:8081/health'):
+                loaded=httpx.get('http://127.0.0.1:8081/v1/models',timeout=3).json()
+                if not any(item.get('id')==model_name for item in loaded.get('data',[])):
+                    raise RuntimeError('A different model occupies port 8081. Stop it before starting this configuration.')
             if not ready('http://127.0.0.1:8081/health'):
-                spawn([str(llama),'-m',str(weights),'--host','127.0.0.1','--port','8081','-c','4096','-t','8','--parallel','1'],'public-model.log')
+                model_proc=spawn([str(llama),'-m',str(weights),'--host','127.0.0.1','--port','8081','-c',str(config.get('context_length',4096)),'-t','8','--parallel','1','--alias',model_name,'--reasoning-budget','0','--reasoning','off'],'public-model.log')
                 for _ in range(90):
                     if ready('http://127.0.0.1:8081/health'): break
                     time.sleep(1)
                 else: raise RuntimeError('Model did not become ready')
             if not ready('http://127.0.0.1:8000/health',model=True):
-                spawn([sys.executable,'-m','uvicorn','geoai.app:app','--host','127.0.0.1','--port','8000'],'public-api.log')
+                api_proc=spawn([sys.executable,'-m','uvicorn','geoai.app:app','--host','127.0.0.1','--port','8000'],'public-api.log')
                 for _ in range(30):
                     if ready('http://127.0.0.1:8000/health',model=True): break
                     time.sleep(1)
@@ -64,7 +72,16 @@ def main():
             print('API tester: '+url+'/docs',flush=True)
             print('Keep the laptop plugged in, connected, and the lid open. Automatic sleep is prevented only while this process runs.',flush=True)
             print('Press Ctrl+C or run stop-public.ps1 to close the public connection.',flush=True)
-            while proc.poll() is None: time.sleep(1)
+            restarts=0
+            while proc.poll() is None:
+                time.sleep(3)
+                if model_proc is not None and model_proc.poll() is not None:
+                    if restarts>=3: raise RuntimeError('Model repeatedly stopped; see public-model.log')
+                    model_proc=spawn([str(llama),'-m',str(weights),'--host','127.0.0.1','--port','8081','-c',str(config.get('context_length',4096)),'-t','8','--parallel','1','--alias',model_name,'--reasoning-budget','0','--reasoning','off'],'public-model.log'); restarts+=1
+                if api_proc is not None and api_proc.poll() is not None:
+                    if restarts>=3: raise RuntimeError('API repeatedly stopped; see public-api.log')
+                    api_proc=spawn([sys.executable,'-m','uvicorn','geoai.app:app','--host','127.0.0.1','--port','8000'],'public-api.log'); restarts+=1
+
         except KeyboardInterrupt: pass
         finally:
             for p in reversed(own):

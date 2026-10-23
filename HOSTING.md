@@ -2,13 +2,13 @@
 
 The public connection forwards only the GeoAI HTTP application on localhost port 8000. The model server remains on localhost port 8081. No paid hosting plan is used.
 
-Current endpoint: https://heavily-investment-chose-computer.trycloudflare.com/ask
+Current endpoint: https://sewing-chef-mitsubishi-picked.trycloudflare.com/ask
 
-Current website: https://heavily-investment-chose-computer.trycloudflare.com/
+Current website: https://sewing-chef-mitsubishi-picked.trycloudflare.com/
 
-Current API tester: https://heavily-investment-chose-computer.trycloudflare.com/docs
+Current API tester: https://sewing-chef-mitsubishi-picked.trycloudflare.com/docs
 
-Verified on 23 October 2026 IST: public `/health` returned HTTP 200 with `model_ready: true`. A POST through the public HTTPS address returned HTTP 200 in 16.56 seconds, comparing 20 place/hour combinations across five venues and declining to recommend unsuitable options. One venue timed out and was disclosed. This single warm-cache test is not a latency or uptime guarantee; it used the public route from this laptop, not an independent external test machine.
+Verified on 23 October 2026 IST: the public `/health` returned HTTP 200 with `model_ready: true`, `model: granite-3.3-2b-instruct`, version 0.4.0. A fresh public running request returned a grounded recommendation. Full live evaluations and timings are recorded in `submission/live-upgrade-evaluation.json`. These calls use the public route from this laptop, not an independent external test machine; they do not guarantee latency or future uptime.
 
 ## Start
 
@@ -42,7 +42,7 @@ Press Ctrl+C in the hosting terminal, or run:
 ./stop-public.ps1
 ```
 
-This closes the public tunnel. The supervisor then releases temporary sleep prevention and stops only the model/API processes that it started itself. Local services it reused remain running.
+This closes the public tunnel. The supervisor then releases temporary sleep prevention and stops only the model/API processes that it started itself. Local services it reused remain running. The helper restarts an owned model/API process after a crash, up to three combined attempts; this does not cover Windows shutdown, supervisor termination or a stopped tunnel.
 
 ## Important URL limitation
 
