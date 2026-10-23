@@ -1,0 +1,844 @@
+{
+  "recorded_at": "2026-10-23T22:17:00.437085+05:30",
+  "base_url": "https://sewing-chef-mitsubishi-picked.trycloudflare.com",
+  "questions_sent_unchanged": true,
+  "cases": [
+    {
+      "number": 1,
+      "question": "Where can I go running tomorrow evening near Koregaon Park?",
+      "http_status": 200,
+      "seconds": 11.58,
+      "response": {
+        "status": "clarification_needed",
+        "question": "Please confirm the exact place from these matches, or enter coordinates.",
+        "parsed_request": {
+          "activity": "running",
+          "location": "Koregaon Park",
+          "start": "2026-10-24T16:00",
+          "end": "2026-10-24T19:00",
+          "profile": "general",
+          "mode": "leisure",
+          "destination": "Koregaon Park",
+          "out_of_scope": false,
+          "radius_km": 10,
+          "exercise_distance_km": null,
+          "venue_scope": "nearby",
+          "pace_minutes_per_km": null,
+          "max_travel_minutes": null,
+          "duration_explicit": false,
+          "duration_minutes": 60,
+          "hours": [
+            16,
+            19
+          ],
+          "duration_basis": "Default one-hour activity"
+        },
+        "matches": [
+          {
+            "name": "Koregaon Park",
+            "latitude": 18.5366225,
+            "longitude": 73.8932738,
+            "venue_id": "way/1304315209",
+            "admin1": "Maharashtra",
+            "admin2": "Pune",
+            "country": "India",
+            "label": "Koregaon Park, Pune, Maharashtra, India"
+          },
+          {
+            "name": "Koregaon Park",
+            "latitude": 18.5377173,
+            "longitude": 73.8929915,
+            "venue_id": "node/9121850286",
+            "admin1": "Maharashtra",
+            "admin2": "Pune",
+            "country": "India",
+            "label": "Koregaon Park, Pune, Maharashtra, India"
+          },
+          {
+            "name": "Koregaon Park Social",
+            "latitude": 18.5386007,
+            "longitude": 73.9076446,
+            "venue_id": "node/14023945100",
+            "admin1": "Maharashtra",
+            "admin2": "Pune",
+            "country": "India",
+            "label": "Koregaon Park Social, Pune, Maharashtra, India"
+          },
+          {
+            "name": "Koregaon Park Police Station",
+            "latitude": 18.5357577,
+            "longitude": 73.8953015,
+            "venue_id": "node/13955649584",
+            "admin1": "Maharashtra",
+            "admin2": "Pune",
+            "country": "India",
+            "label": "Koregaon Park Police Station, Pune, Maharashtra, India"
+          },
+          {
+            "name": "Koregaon Park Garbage Transfer Center",
+            "latitude": 18.5395107,
+            "longitude": 73.9002155,
+            "venue_id": "way/280765137",
+            "admin1": "Maharashtra",
+            "admin2": "Pune",
+            "country": "India",
+            "label": "Koregaon Park Garbage Transfer Center, Pune, Maharashtra, India"
+          }
+        ],
+        "sources": [
+          {
+            "id": "ba94969969ce",
+            "url": "https://photon.komoot.io/api/?q=Koregaon+Park&limit=5",
+            "parameters": {
+              "q": "Koregaon Park",
+              "limit": 5
+            },
+            "fetched_at": "2026-10-23T16:45:11.624184+00:00",
+            "cached": false
+          }
+        ],
+        "field": "location"
+      },
+      "intent_errors": {},
+      "intent_check_passed": true
+    },
+    {
+      "number": 2,
+      "question": "Best time this weekend for a kids' cricket match within 15 km of Whitefield?",
+      "http_status": 200,
+      "seconds": 12.59,
+      "response": {
+        "status": "clarification_needed",
+        "question": "Please confirm the exact place from these matches, or enter coordinates.",
+        "parsed_request": {
+          "activity": "cricket",
+          "location": "Whitefield",
+          "start": "2026-10-24T06:00",
+          "end": "2026-10-25T20:00",
+          "profile": "child",
+          "mode": "leisure",
+          "destination": "15 km radius around Whitefield",
+          "out_of_scope": false,
+          "radius_km": 15.0,
+          "exercise_distance_km": null,
+          "venue_scope": "nearby",
+          "pace_minutes_per_km": null,
+          "max_travel_minutes": null,
+          "duration_explicit": false,
+          "duration_minutes": 60,
+          "assumptions": [
+            "No part of day was specified; comparing 06:00\u00e2\u20ac\u201c20:00 IST."
+          ],
+          "duration_basis": "Default one-hour activity"
+        },
+        "matches": [
+          {
+            "name": "Whitefield",
+            "latitude": 44.3731286,
+            "longitude": -71.6119661,
+            "venue_id": "relation/2050717",
+            "admin1": "New Hampshire",
+            "admin2": "",
+            "country": "United States",
+            "label": "Whitefield, New Hampshire, United States"
+          },
+          {
+            "name": "Whitefield",
+            "latitude": 53.5533682,
+            "longitude": -2.2969019,
+            "venue_id": "node/30844665",
+            "admin1": "England",
+            "admin2": "Bury",
+            "country": "United Kingdom",
+            "label": "Whitefield, Bury, England, United Kingdom"
+          },
+          {
+            "name": "Whitefield",
+            "latitude": 44.1700735,
+            "longitude": -69.6253223,
+            "venue_id": "relation/12194347",
+            "admin1": "Maine",
+            "admin2": "",
+            "country": "United States",
+            "label": "Whitefield, Maine, United States"
+          },
+          {
+            "name": "Whitefield",
+            "latitude": 35.252597,
+            "longitude": -95.237467,
+            "venue_id": "relation/185037",
+            "admin1": "Oklahoma",
+            "admin2": "",
+            "country": "United States",
+            "label": "Whitefield, Oklahoma, United States"
+          },
+          {
+            "name": "Whitefield",
+            "latitude": 12.9963995,
+            "longitude": 77.7614229,
+            "venue_id": "node/1177705836",
+            "admin1": "Karnataka",
+            "admin2": "Seegehalli",
+            "country": "India",
+            "label": "Whitefield, Seegehalli, Karnataka, India"
+          }
+        ],
+        "sources": [
+          {
+            "id": "b2c297b67ec8",
+            "url": "https://photon.komoot.io/api/?q=Whitefield&limit=5",
+            "parameters": {
+              "q": "Whitefield",
+              "limit": 5
+            },
+            "fetched_at": "2026-10-23T16:45:24.231949+00:00",
+            "cached": false
+          }
+        ],
+        "field": "location"
+      },
+      "intent_errors": {},
+      "intent_check_passed": true
+    },
+    {
+      "number": 3,
+      "question": "I have mild asthma, where's good for a morning walk near Powai in the next two days?",
+      "http_status": 200,
+      "seconds": 12.2,
+      "response": {
+        "status": "clarification_needed",
+        "question": "Please confirm the exact place from these matches, or enter coordinates.",
+        "parsed_request": {
+          "activity": "hiking",
+          "location": "Powai",
+          "start": "2026-10-23T06:00",
+          "end": "2026-10-24T10:00",
+          "profile": "asthma",
+          "mode": "leisure",
+          "destination": "null",
+          "out_of_scope": false,
+          "radius_km": 10,
+          "exercise_distance_km": null,
+          "venue_scope": "nearby",
+          "pace_minutes_per_km": null,
+          "max_travel_minutes": null,
+          "duration_explicit": false,
+          "duration_minutes": 60,
+          "hours": [
+            6,
+            10
+          ],
+          "duration_basis": "Default one-hour activity"
+        },
+        "matches": [
+          {
+            "name": "Powai",
+            "latitude": 19.1187195,
+            "longitude": 72.9073476,
+            "venue_id": "node/4759418251",
+            "admin1": "Maharashtra",
+            "admin2": "Mumbai",
+            "country": "India",
+            "label": "Powai, Mumbai, Maharashtra, India"
+          },
+          {
+            "name": "Powai",
+            "latitude": 27.3497387,
+            "longitude": 95.6475824,
+            "venue_id": "node/3687006711",
+            "admin1": "Assam",
+            "admin2": "",
+            "country": "India",
+            "label": "Powai, Assam, India"
+          },
+          {
+            "name": "Powai Lake",
+            "latitude": 19.1277203,
+            "longitude": 72.9062142,
+            "venue_id": "relation/8546709",
+            "admin1": "Maharashtra",
+            "admin2": "Mumbai",
+            "country": "India",
+            "label": "Powai Lake, Mumbai, Maharashtra, India"
+          },
+          {
+            "name": "Powai River",
+            "latitude": -10.2243964,
+            "longitude": 150.4756075,
+            "venue_id": "way/1528772339",
+            "admin1": "Milne Bay Province",
+            "admin2": "Garuahi",
+            "country": "Papua Niugini",
+            "label": "Powai River, Garuahi, Milne Bay Province, Papua Niugini"
+          },
+          {
+            "name": "Powai Dam",
+            "latitude": 19.1269065,
+            "longitude": 72.8966547,
+            "venue_id": "way/235932515",
+            "admin1": "Maharashtra",
+            "admin2": "Mumbai",
+            "country": "India",
+            "label": "Powai Dam, Mumbai, Maharashtra, India"
+          }
+        ],
+        "sources": [
+          {
+            "id": "b09c013db8eb",
+            "url": "https://photon.komoot.io/api/?q=Powai&limit=5",
+            "parameters": {
+              "q": "Powai",
+              "limit": 5
+            },
+            "fetched_at": "2026-10-23T16:45:36.074124+00:00",
+            "cached": false
+          }
+        ],
+        "field": "location"
+      },
+      "intent_errors": {},
+      "intent_check_passed": true
+    },
+    {
+      "number": 4,
+      "question": "Is it okay to cycle to work at 8 AM?",
+      "http_status": 200,
+      "seconds": 9.84,
+      "response": {
+        "status": "clarification_needed",
+        "question": "Which neighbourhood or city should I search near?",
+        "parsed_request": {
+          "activity": "cycling",
+          "location": null,
+          "start": null,
+          "end": null,
+          "profile": "general",
+          "mode": "commute",
+          "destination": null,
+          "out_of_scope": false,
+          "radius_km": 10,
+          "exercise_distance_km": null,
+          "venue_scope": "nearby",
+          "pace_minutes_per_km": null,
+          "max_travel_minutes": null,
+          "duration_explicit": false,
+          "duration_minutes": 60,
+          "duration_basis": "Default one-hour activity"
+        },
+        "field": "location"
+      },
+      "intent_errors": {},
+      "intent_check_passed": true
+    },
+    {
+      "number": 5,
+      "question": "Planning an outdoor birthday party on Sunday afternoon in Pune, what should I keep in mind?",
+      "http_status": 200,
+      "seconds": 12.19,
+      "response": {
+        "status": "clarification_needed",
+        "question": "Please confirm the exact place from these matches, or enter coordinates.",
+        "parsed_request": {
+          "activity": "event",
+          "location": "Pune",
+          "start": "2026-10-25T12:00",
+          "end": "2026-10-25T16:00",
+          "profile": "general",
+          "mode": "leisure",
+          "destination": "outdoor",
+          "out_of_scope": false,
+          "radius_km": 10,
+          "exercise_distance_km": null,
+          "venue_scope": "nearby",
+          "pace_minutes_per_km": null,
+          "max_travel_minutes": null,
+          "duration_explicit": false,
+          "duration_minutes": 60,
+          "hours": [
+            12,
+            16
+          ],
+          "duration_basis": "Default one-hour activity"
+        },
+        "matches": [
+          {
+            "name": "Pune",
+            "latitude": 18.5213738,
+            "longitude": 73.8545071,
+            "venue_id": "node/16174445",
+            "admin1": "Maharashtra",
+            "admin2": "",
+            "country": "India",
+            "label": "Pune, Maharashtra, India"
+          },
+          {
+            "name": "Pune",
+            "latitude": 18.6448627,
+            "longitude": 73.9224157,
+            "venue_id": "relation/1986140",
+            "admin1": "Maharashtra",
+            "admin2": "",
+            "country": "India",
+            "label": "Pune, Maharashtra, India"
+          },
+          {
+            "name": "Punerot",
+            "latitude": 48.4824885,
+            "longitude": 5.8091131,
+            "venue_id": "relation/935191",
+            "admin1": "Grand Est",
+            "admin2": "",
+            "country": "France",
+            "label": "Punerot, Grand Est, France"
+          },
+          {
+            "name": "Pune International Airport",
+            "latitude": 18.5803749,
+            "longitude": 73.9182265,
+            "venue_id": "way/481312177",
+            "admin1": "Maharashtra",
+            "admin2": "Pune",
+            "country": "India",
+            "label": "Pune International Airport, Pune, Maharashtra, India"
+          },
+          {
+            "name": "Pune International Airport",
+            "latitude": 18.5803749,
+            "longitude": 73.9182265,
+            "venue_id": "way/481312177",
+            "admin1": "Maharashtra",
+            "admin2": "Pune",
+            "country": "India",
+            "label": "Pune International Airport, Pune, Maharashtra, India"
+          }
+        ],
+        "sources": [
+          {
+            "id": "5938d4c103e9",
+            "url": "https://photon.komoot.io/api/?q=Pune&limit=5",
+            "parameters": {
+              "q": "Pune",
+              "limit": 5
+            },
+            "fetched_at": "2026-10-23T16:45:58.472334+00:00",
+            "cached": false
+          }
+        ],
+        "field": "location"
+      },
+      "intent_errors": {},
+      "intent_check_passed": true
+    },
+    {
+      "number": 6,
+      "question": "Good place and time for golf on Saturday within 40 km of Andheri?",
+      "http_status": 200,
+      "seconds": 12.47,
+      "response": {
+        "status": "clarification_needed",
+        "question": "Please confirm the exact place from these matches, or enter coordinates.",
+        "parsed_request": {
+          "activity": "golf",
+          "location": "Andheri",
+          "start": "2026-10-24T06:00",
+          "end": "2026-10-24T20:00",
+          "profile": "general",
+          "mode": "leisure",
+          "destination": "golf course within 40 km",
+          "out_of_scope": false,
+          "radius_km": 40.0,
+          "exercise_distance_km": null,
+          "venue_scope": "nearby",
+          "pace_minutes_per_km": null,
+          "max_travel_minutes": null,
+          "duration_explicit": false,
+          "duration_minutes": 60,
+          "assumptions": [
+            "No part of day was specified; comparing 06:00\u00e2\u20ac\u201c20:00 IST."
+          ],
+          "duration_basis": "Default one-hour activity"
+        },
+        "matches": [
+          {
+            "name": "Andheri",
+            "latitude": 19.1196976,
+            "longitude": 72.8464205,
+            "venue_id": "node/5696928866",
+            "admin1": "Maharashtra",
+            "admin2": "Mumbai",
+            "country": "India",
+            "label": "Andheri, Mumbai, Maharashtra, India"
+          },
+          {
+            "name": "Andheri",
+            "latitude": 30.2699277,
+            "longitude": 75.8130026,
+            "venue_id": "node/6051603603",
+            "admin1": "Punjab",
+            "admin2": "",
+            "country": "India",
+            "label": "Andheri, Punjab, India"
+          },
+          {
+            "name": "Andheri",
+            "latitude": 30.8306135,
+            "longitude": 76.636033,
+            "venue_id": "node/6052638734",
+            "admin1": "Punjab",
+            "admin2": "",
+            "country": "India",
+            "label": "Andheri, Punjab, India"
+          },
+          {
+            "name": "Andheri",
+            "latitude": 19.1162591,
+            "longitude": 72.8466088,
+            "venue_id": "way/257491053",
+            "admin1": "Maharashtra",
+            "admin2": "Mumbai",
+            "country": "India",
+            "label": "Andheri, Mumbai, Maharashtra, India"
+          },
+          {
+            "name": "Andheri",
+            "latitude": 19.1193373,
+            "longitude": 72.8464956,
+            "venue_id": "node/7510862071",
+            "admin1": "Maharashtra",
+            "admin2": "Mumbai",
+            "country": "India",
+            "label": "Andheri, Mumbai, Maharashtra, India"
+          }
+        ],
+        "sources": [
+          {
+            "id": "c6a059db8258",
+            "url": "https://photon.komoot.io/api/?q=Andheri&limit=5",
+            "parameters": {
+              "q": "Andheri",
+              "limit": 5
+            },
+            "fetched_at": "2026-10-23T16:46:10.931483+00:00",
+            "cached": false
+          }
+        ],
+        "field": "location"
+      },
+      "intent_errors": {},
+      "intent_check_passed": true
+    },
+    {
+      "number": 7,
+      "question": "Where can I take sunset photos this evening around Bandra?",
+      "http_status": 200,
+      "seconds": 10.31,
+      "response": {
+        "status": "clarification_needed",
+        "question": "Please confirm the exact place from these matches, or enter coordinates.",
+        "parsed_request": {
+          "activity": "photography",
+          "location": "Bandra",
+          "start": "2026-10-23T16:00",
+          "end": "2026-10-23T19:00",
+          "profile": "general",
+          "mode": "leisure",
+          "destination": "null",
+          "out_of_scope": false,
+          "radius_km": 10,
+          "exercise_distance_km": null,
+          "venue_scope": "nearby",
+          "pace_minutes_per_km": null,
+          "max_travel_minutes": null,
+          "duration_explicit": false,
+          "duration_minutes": 60,
+          "hours": [
+            16,
+            19
+          ],
+          "sunset_only": true,
+          "duration_basis": "Default one-hour activity"
+        },
+        "matches": [
+          {
+            "name": "Bandra",
+            "latitude": 19.0549792,
+            "longitude": 72.8402203,
+            "venue_id": "node/2630075000",
+            "admin1": "Maharashtra",
+            "admin2": "Bandra, Mumbai",
+            "country": "India",
+            "label": "Bandra, Bandra, Mumbai, Maharashtra, India"
+          },
+          {
+            "name": "Bandra",
+            "latitude": 26.0492937,
+            "longitude": 85.6225562,
+            "venue_id": "relation/10257269",
+            "admin1": "Bihar",
+            "admin2": "",
+            "country": "India",
+            "label": "Bandra, Bihar, India"
+          },
+          {
+            "name": "Bandra",
+            "latitude": 22.6282606,
+            "longitude": 79.9738372,
+            "venue_id": "relation/16537011",
+            "admin1": "Madhya Pradesh",
+            "admin2": "",
+            "country": "India",
+            "label": "Bandra, Madhya Pradesh, India"
+          },
+          {
+            "name": "Bandra",
+            "latitude": 22.2962668,
+            "longitude": 79.6823517,
+            "venue_id": "relation/16539341",
+            "admin1": "Madhya Pradesh",
+            "admin2": "",
+            "country": "India",
+            "label": "Bandra, Madhya Pradesh, India"
+          },
+          {
+            "name": "Bandra",
+            "latitude": 22.1774166,
+            "longitude": 79.1978968,
+            "venue_id": "relation/16542960",
+            "admin1": "Madhya Pradesh",
+            "admin2": "",
+            "country": "India",
+            "label": "Bandra, Madhya Pradesh, India"
+          }
+        ],
+        "sources": [
+          {
+            "id": "3673185ad9f4",
+            "url": "https://photon.komoot.io/api/?q=Bandra&limit=5",
+            "parameters": {
+              "q": "Bandra",
+              "limit": 5
+            },
+            "fetched_at": "2026-10-23T04:43:33.343005+00:00",
+            "cached": true
+          }
+        ],
+        "field": "location"
+      },
+      "intent_errors": {},
+      "intent_check_passed": true
+    },
+    {
+      "number": 8,
+      "question": "Is Saturday or Sunday better for a hike near Lonavala?",
+      "http_status": 200,
+      "seconds": 13.53,
+      "response": {
+        "status": "clarification_needed",
+        "question": "Please confirm the exact place from these matches, or enter coordinates.",
+        "parsed_request": {
+          "activity": "hiking",
+          "location": "Lonavala",
+          "start": "2026-10-24T06:00",
+          "end": "2026-10-25T20:00",
+          "profile": "general",
+          "mode": "leisure",
+          "destination": "Lonavala",
+          "out_of_scope": false,
+          "radius_km": 10,
+          "exercise_distance_km": null,
+          "venue_scope": "nearby",
+          "pace_minutes_per_km": null,
+          "max_travel_minutes": null,
+          "duration_explicit": false,
+          "duration_minutes": 60,
+          "assumptions": [
+            "No part of day was specified; comparing 06:00\u00e2\u20ac\u201c20:00 IST."
+          ],
+          "duration_basis": "Default one-hour activity"
+        },
+        "matches": [
+          {
+            "name": "Lonavala",
+            "latitude": 18.7503694,
+            "longitude": 73.4069436,
+            "venue_id": "node/276569986",
+            "admin1": "Maharashtra",
+            "admin2": "Lonavala",
+            "country": "India",
+            "label": "Lonavala, Maharashtra, India"
+          },
+          {
+            "name": "Lonavala",
+            "latitude": 18.7548563,
+            "longitude": 73.4016729,
+            "venue_id": "node/517151014",
+            "admin1": "Maharashtra",
+            "admin2": "",
+            "country": "India",
+            "label": "Lonavala, Maharashtra, India"
+          },
+          {
+            "name": "Lonavala",
+            "latitude": 18.749206,
+            "longitude": 73.4080886,
+            "venue_id": "way/400644798",
+            "admin1": "Maharashtra",
+            "admin2": "Lonavala",
+            "country": "India",
+            "label": "Lonavala, Maharashtra, India"
+          },
+          {
+            "name": "Lonavala",
+            "latitude": 18.7487957,
+            "longitude": 73.4087737,
+            "venue_id": "node/4031818261",
+            "admin1": "Maharashtra",
+            "admin2": "Lonavala",
+            "country": "India",
+            "label": "Lonavala, Maharashtra, India"
+          },
+          {
+            "name": "Lonavala",
+            "latitude": 18.7489632,
+            "longitude": 73.4088544,
+            "venue_id": "node/4031660717",
+            "admin1": "Maharashtra",
+            "admin2": "Lonavala",
+            "country": "India",
+            "label": "Lonavala, Maharashtra, India"
+          }
+        ],
+        "sources": [
+          {
+            "id": "5c176993c811",
+            "url": "https://photon.komoot.io/api/?q=Lonavala&limit=5",
+            "parameters": {
+              "q": "Lonavala",
+              "limit": 5
+            },
+            "fetched_at": "2026-10-23T16:46:34.549995+00:00",
+            "cached": false
+          }
+        ],
+        "field": "location"
+      },
+      "intent_errors": {},
+      "intent_check_passed": true
+    },
+    {
+      "number": 9,
+      "question": "When is it safe for my parents to walk outdoors tomorrow in Bengaluru?",
+      "http_status": 200,
+      "seconds": 11.98,
+      "response": {
+        "status": "clarification_needed",
+        "question": "What age group or health considerations apply to your parents/family? Select a profile, or state their ages; I will not assume they are seniors.",
+        "parsed_request": {
+          "activity": "hiking",
+          "location": "Bengaluru",
+          "start": "2026-10-24T06:00",
+          "end": "2026-10-24T20:00",
+          "profile": "general",
+          "mode": "leisure",
+          "destination": "outdoors",
+          "out_of_scope": false,
+          "radius_km": 10,
+          "exercise_distance_km": null,
+          "venue_scope": "nearby",
+          "pace_minutes_per_km": null,
+          "confirm_family_profile": true,
+          "max_travel_minutes": null,
+          "duration_explicit": false,
+          "duration_minutes": 60,
+          "assumptions": [
+            "No part of day was specified; comparing 06:00\u00e2\u20ac\u201c20:00 IST."
+          ]
+        },
+        "field": "profile"
+      },
+      "intent_errors": {},
+      "intent_check_passed": true
+    },
+    {
+      "number": 10,
+      "question": "Outdoor tennis after work today near Hinjewadi, any good spots?",
+      "http_status": 200,
+      "seconds": 13.58,
+      "response": {
+        "status": "clarification_needed",
+        "question": "Please confirm the exact place from these matches, or enter coordinates.",
+        "parsed_request": {
+          "activity": "tennis",
+          "location": "Hinjewadi",
+          "start": "2026-10-23T17:00",
+          "end": "2026-10-23T20:00",
+          "profile": "general",
+          "mode": "leisure",
+          "destination": "near Hinjewadi",
+          "out_of_scope": false,
+          "radius_km": 10,
+          "exercise_distance_km": null,
+          "venue_scope": "nearby",
+          "pace_minutes_per_km": null,
+          "max_travel_minutes": null,
+          "duration_explicit": false,
+          "duration_minutes": 60,
+          "hours": [
+            17,
+            20
+          ],
+          "duration_basis": "Default one-hour activity"
+        },
+        "matches": [
+          {
+            "name": "Wakad Flyover",
+            "latitude": 18.5924168,
+            "longitude": 73.7603495,
+            "venue_id": "way/250952421",
+            "admin1": "Maharashtra",
+            "admin2": "",
+            "country": "India",
+            "label": "Wakad Flyover, Maharashtra, India"
+          },
+          {
+            "name": "Hinjawadi",
+            "latitude": 18.5927532,
+            "longitude": 73.7382151,
+            "venue_id": "node/9455603476",
+            "admin1": "Maharashtra",
+            "admin2": "",
+            "country": "India",
+            "label": "Hinjawadi, Maharashtra, India"
+          },
+          {
+            "name": "Hingewadi",
+            "latitude": 18.9990724,
+            "longitude": 75.396198,
+            "venue_id": "node/10088620151",
+            "admin1": "Maharashtra",
+            "admin2": "Shirur Kasar",
+            "country": "India",
+            "label": "Hingewadi, Shirur Kasar, Maharashtra, India"
+          }
+        ],
+        "sources": [
+          {
+            "id": "464644933efd",
+            "url": "https://photon.komoot.io/api/?q=Hinjewadi&limit=5",
+            "parameters": {
+              "q": "Hinjewadi",
+              "limit": 5
+            },
+            "fetched_at": "2026-10-23T16:47:00.362742+00:00",
+            "cached": false
+          }
+        ],
+        "field": "location"
+      },
+      "intent_errors": {},
+      "intent_check_passed": true
+    }
+  ],
+  "intent_checks_passed": 10,
+  "interpretation_check_note": "Checks cover the explicit activity/profile/radius/date details shown in the response; they are not a claim of broad SLM accuracy or a completed recommendation. Exact rulebook questions are evaluation inputs only."
+}

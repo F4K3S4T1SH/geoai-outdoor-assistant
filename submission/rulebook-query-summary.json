@@ -1,0 +1,102 @@
+{
+  "recorded_at": "2026-10-23T22:23:08.485906+05:30",
+  "model": "granite-3.3-2b-instruct",
+  "original_questions": 10,
+  "interpretation_checks_passed": 10,
+  "http_requests_including_followups": 20,
+  "http_200_responses": 20,
+  "recommendations": 3,
+  "condition_based_declines": 4,
+  "past_time_clarifications": 2,
+  "unresolved_coverage_cases": 1,
+  "cases": [
+    {
+      "number": 1,
+      "question": "Where can I go running tomorrow evening near Koregaon Park?",
+      "interpretation_passed": true,
+      "initial_response": "clarification_needed",
+      "followup_response": "avoid_or_insufficient_data",
+      "observation": "Declined on AQI/daylight limits; one venue lacked geographic context."
+    },
+    {
+      "number": 2,
+      "question": "Best time this weekend for a kids' cricket match within 15 km of Whitefield?",
+      "interpretation_passed": true,
+      "initial_response": "clarification_needed",
+      "followup_response": "recommendation",
+      "observation": "Recommended Willow Sports Cricket academy on Sunday 25 October at 07:00 IST, child profile, US AQI 48. One other venue lacked geographic context."
+    },
+    {
+      "number": 3,
+      "question": "I have mild asthma, where's good for a morning walk near Powai in the next two days?",
+      "interpretation_passed": true,
+      "initial_response": "clarification_needed",
+      "followup_response": "avoid_or_insufficient_data",
+      "observation": "Declined on stricter asthma AQI/heat limits; two venues lacked geographic context."
+    },
+    {
+      "number": 4,
+      "question": "Is it okay to cycle to work at 8 AM?",
+      "interpretation_passed": true,
+      "initial_response": "clarification_needed",
+      "followup_response": "recommendation",
+      "observation": "Original question asked for missing origin. After explicit test origin/destination/date: recommended the Cubbon Park to Vidhana Soudha commute at 08:00 on 24 October; US AQI 53."
+    },
+    {
+      "number": 5,
+      "question": "Planning an outdoor birthday party on Sunday afternoon in Pune, what should I keep in mind?",
+      "interpretation_passed": true,
+      "initial_response": "clarification_needed",
+      "followup_response": "avoid_or_insufficient_data",
+      "observation": "Declined on AQI/heat limits; complete checks for two compared venues."
+    },
+    {
+      "number": 6,
+      "question": "Good place and time for golf on Saturday within 40 km of Andheri?",
+      "interpretation_passed": true,
+      "initial_response": "clarification_needed",
+      "followup_response": "no_verified_venues",
+      "observation": "Unresolved coverage gap: map-search fallback checked about 1 km, not the requested 40 km. No verified golf venue; cannot call the full example verified."
+    },
+    {
+      "number": 7,
+      "question": "Where can I take sunset photos this evening around Bandra?",
+      "interpretation_passed": true,
+      "initial_response": "clarification_needed",
+      "followup_response": "clarification_needed",
+      "observation": "After location confirmation, asked for a future interval. This evening had already passed at test time."
+    },
+    {
+      "number": 8,
+      "question": "Is Saturday or Sunday better for a hike near Lonavala?",
+      "interpretation_passed": true,
+      "initial_response": "clarification_needed",
+      "followup_response": "avoid_or_insufficient_data",
+      "observation": "Compared Saturday and Sunday (114 venue/time pairs); declined on AQI/daylight limits with complete checks for three compared venues."
+    },
+    {
+      "number": 9,
+      "question": "When is it safe for my parents to walk outdoors tomorrow in Bengaluru?",
+      "interpretation_passed": true,
+      "initial_response": "clarification_needed",
+      "followup_response": "recommendation",
+      "observation": "Original question asked for parents' age/profile. After explicit senior test profile and Bengaluru search centre: recommended Park at RT Nagar on 24 October at 07:00 IST, US AQI 45."
+    },
+    {
+      "number": 10,
+      "question": "Outdoor tennis after work today near Hinjewadi, any good spots?",
+      "interpretation_passed": true,
+      "initial_response": "clarification_needed",
+      "followup_response": "clarification_needed",
+      "observation": "After location confirmation, asked for a future interval. Today's after-work window had already passed."
+    }
+  ],
+  "limitations": [
+    "All unchanged questions initially requested clarification: eight place confirmations, one missing commute origin, one unspecified parents profile.",
+    "Followups use disclosed test choices, not inferred personal addresses or health facts.",
+    "The live provider response changes over time. No general accuracy, universal coverage or future uptime guarantee.",
+    "Golf coverage is not fully verified; fallback around 1 km did not cover the requested 40 km.",
+    "Some other venues lacked geographic context. Positive recommendations only used complete evidence for the chosen option.",
+    "Unspecified activity duration defaults to one hour, explicitly disclosed by the application."
+  ]
+}
