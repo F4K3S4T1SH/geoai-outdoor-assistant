@@ -32,7 +32,7 @@ Open the printed public URL plus `/health`; it should report `model_ready: true`
 {"question":"Where can I go running tomorrow morning within 5 km of Powai?","latitude":19.1176,"longitude":72.906}
 ```
 
-Coordinates are optional but help resolve neighbourhoods. Results use live source data and may correctly reject all options. Missing locations return clarification. When another request is running, the server returns HTTP 429 with Retry-After. Requests exceeding 85 seconds return HTTP 504. Individual venues get a 10-second evidence budget, and timed-out venues are disclosed rather than silently treated as suitable.
+Coordinates are optional but help resolve neighbourhoods. Results use live source data and may correctly reject all options. Missing locations return clarification. When another request is running, the server returns HTTP 429 with Retry-After. Requests exceeding 85 seconds return HTTP 504. Individual venues get a 14-second evidence budget, and timed-out venues are disclosed rather than silently treated as suitable.
 
 ## Stop
 

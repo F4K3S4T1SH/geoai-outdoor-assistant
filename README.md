@@ -58,7 +58,7 @@ Weather/AQI cache TTL is 15 minutes; static Overpass map data and geocoding are 
 
 ## Verified checks and limitations
 
-- **40 automated checks pass**, including all ten activity flows, two-hour windows with a thunderstorm in the second hour, geographic scoring, profiles, date normalization, missing data and timeouts. These use synthetic fixtures and do not prove coverage of every real venue.
+- **67 automated checks pass**, including all ten activity flows, two-hour windows with a thunderstorm in the second hour, geographic scoring, profiles, date normalization, missing data and timeouts. These use synthetic fixtures and do not prove coverage of every real venue.
 - A live local model evaluation classified **10/10** varied activity requests after normalization. See `submission/model-evaluation.json`; this small test set is not a general accuracy claim.
 - Public model LFS SHA256 verified. `llama_cpp.Llama.from_pretrained` loaded the submitted repository snapshot and generated `OK`; see `submission/model-loading-check.json`. The optional Transformers GGUF path is documented but was not run because full dequantization exceeded free memory.
 - Real venue, weather, AQI, geocoding and bicycle-route calls have succeeded. Public map APIs have also repeatedly timed out. The application reports missing evidence, not a fabricated recommendation.
@@ -73,3 +73,9 @@ Base model: **Qwen/Qwen2.5-1.5B-Instruct**, 1.54B parameters, open weights under
 OpenAI Codex helped write and test the code. Libraries/tools: FastAPI, Uvicorn, Pydantic, HTTPX, tzdata, llama.cpp, Hugging Face Hub, Leaflet, Cloudflare Tunnel and pytest. Optional loading checks use llama-cpp-python; the separate verification environment also installed PyTorch/Transformers. Frontend fonts: DM Sans and Manrope from Google Fonts. Application code is MIT; model and data licences remain separate.
 
 The six-slide presentation is `submission/outside-geoai-hackathon.pptx`. Docker hosting files are an optional, unverified deployment candidate, not the active hosting route. No paid plan has been purchased.
+
+### Map outage handling
+
+Fresh map cache entries remain usable during provider cooldowns. If Overpass fails, the app retrieves a small read-only OSM map extract around each venue (and one search-centre extract when venue search fails), serialized and cached for 24 hours. These extracts can omit unmapped features and enclosing polygons. This is a bounded prototype fallback, not a bulk downloader. Conditions that fail the prototype thresholds and incomplete evidence have separate result labels; missing checks prevent a positive recommendation. Comparison counts distinguish weather availability from complete checks.
+
+OSM map API reference: https://wiki.openstreetmap.org/wiki/API_v0.6#Retrieving_map_data_by_bounding_box:_GET_/api/0.6/map

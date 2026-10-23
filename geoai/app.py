@@ -13,7 +13,7 @@ from .intent import normalize
 from .ranking import ACTIVITIES,suitable,context_features,score
 from .advice import advice_for
 
-app=FastAPI(title='GeoAI Outdoor Assistant',version='0.2.0')
+app=FastAPI(title='GeoAI Outdoor Assistant',version='0.2.2')
 TZ=ZoneInfo('Asia/Kolkata'); GATE=asyncio.Semaphore(1)
 STATIC=Path(__file__).resolve().parent/'static'
 STATIC.mkdir(exist_ok=True)
@@ -47,7 +47,7 @@ async def health():
         async with httpx.AsyncClient(timeout=3) as c: r=await c.get('http://127.0.0.1:8081/health')
         ready=r.status_code==200
     except httpx.HTTPError: ready=False
-    return {'api':'ok','model_ready':ready,'model':model.MODEL,'version':'0.2.0'}
+    return {'api':'ok','model_ready':ready,'model':model.MODEL,'version':'0.2.2'}
 
 @app.get('/activities')
 def activities(): return list(ACTIVITIES)
@@ -138,13 +138,13 @@ async def recommend(q):
     else:
         found,src=await data.places(lat,lon,radius,activity); sources.append(src); venues=[p for p in found if suitable(p,activity)][:5]
     if not venues: return {'status':'no_verified_venues','message':'No compatible outdoor venues were found in this live map query. Try another place or a wider radius.','sources':sources,'request':intent}
-    options=[]; failures=[]; evaluated=set()
+    options=[]; failures=[]; evaluated=set(); complete=set()
     for venue_index,place in enumerate(venues):
         budget=72-(time.monotonic()-begun)
         if budget<3:
             failures.extend('Not assessed within the request budget: '+p['name'] for p in venues[venue_index:]); break
         try:
-            weather,aqmap,ctx,ss,ff=await asyncio.wait_for(venue_evidence(place),timeout=min(10,budget)); sources.extend(ss); failures.extend(ff)
+            weather,aqmap,ctx,ss,ff=await asyncio.wait_for(venue_evidence(place),timeout=min(14,budget)); sources.extend(ss); failures.extend(ff)
             route=place.get('route')
             if route is None and activity in ('cycling','hiking','running'):
                 route,rs=await route_evidence((lat,lon),place,activity)
@@ -183,8 +183,16 @@ async def recommend(q):
                     if dt<local(datetime.fromisoformat(rise)) or dt+timedelta(minutes=duration)>local(datetime.fromisoformat(sunset)):
                         blocks.append('The full activity window extends outside forecast daylight; venue lighting is unverified')
                 if q.max_travel_minutes and route and route['duration_minutes']>q.max_travel_minutes: blocks.append('Route exceeds your travel-time budget')
+                missing=[]
+                if ctx.get('context_available') is False: missing.append('Nearby roads, industry, water and greenery could not be checked')
+                if any(sample['us_aqi'] is None for sample in samples): missing.append('Air-quality forecast is missing for part of the activity')
+                if len(samples)!=steps or any(v is None for v in values): missing.append('Weather forecast is incomplete for part of the activity')
+                if any(sample['weather'].get('wind_direction_10m') is None for sample in samples): missing.append('Wind direction is missing; upwind exposure could not be checked')
+                conditions=[b for b in dict.fromkeys(blocks) if not any(x in b for x in ('unavailable','incomplete','could not be completed'))]
+                blocks.extend(missing)
+                if not missing: complete.add(place.get('id',place['name']))
                 value=None if any(v is None for v in values) else min(values)
-                options.append({'place':place,'time':dt.isoformat(),'end_time':(dt+timedelta(minutes=duration)).isoformat(),'score':value,'avoid_reasons':list(dict.fromkeys(blocks)),'tradeoffs':list(dict.fromkeys(reasons)),'weather':samples[0]['weather'],'us_aqi':samples[0]['us_aqi'],'hourly_evidence':samples,'geographic_context':first_features,'route':route,'evidence_source_ids':[s.get('id',s['url']) for s in ss],'depart_at':(dt-timedelta(minutes=route['duration_minutes'])).isoformat() if route and not commute else dt.isoformat(),'traffic_assessment':{'basis':'Mapped road proximity plus weekday commute hours; no live congestion feed','kind':'proxy'},'access_note':'Confirm venue access, opening hours and booking; map tags do not guarantee admission.'})
+                options.append({'place':place,'time':dt.isoformat(),'end_time':(dt+timedelta(minutes=duration)).isoformat(),'score':value,'avoid_reasons':list(dict.fromkeys(blocks)),'checks_missing':missing,'condition_reasons':conditions,'assessment':'incomplete' if missing else ('unsuitable' if conditions else 'eligible'),'tradeoffs':list(dict.fromkeys(reasons)),'weather':samples[0]['weather'],'us_aqi':samples[0]['us_aqi'],'hourly_evidence':samples,'geographic_context':first_features,'route':route,'evidence_source_ids':[s.get('id',s['url']) for s in ss],'depart_at':(dt-timedelta(minutes=route['duration_minutes'])).isoformat() if route and not commute else dt.isoformat(),'traffic_assessment':{'basis':'Mapped road proximity plus weekday commute hours; no live congestion feed','kind':'proxy'},'access_note':'Confirm venue access, opening hours and booking; map tags do not guarantee admission.'})
         except (data.SourceError,TimeoutError): failures.append('Live data unavailable or timed out for '+place['name'])
     valid=sorted([o for o in options if o['score'] is not None and not o['avoid_reasons']],key=lambda o:(-o['score'],o['place']['distance_km'],o['time']))
     best=valid[0] if valid else None; model_evidence={}
@@ -202,8 +210,11 @@ async def recommend(q):
         if key not in seen: alternatives.append(o); seen.add(key)
         if len(alternatives)==3: break
     avoid=[]; seen_avoid=set()
-    for o in sorted([o for o in options if o['avoid_reasons']],key=lambda o:o['time']):
+    for o in sorted([o for o in options if o['avoid_reasons']],key=lambda o:(bool(o['checks_missing']),o['time'])):
         key=(o['place'].get('id',o['place']['name']),tuple(o['avoid_reasons']))
         if key not in seen_avoid: avoid.append(o); seen_avoid.add(key)
         if len(avoid)==5: break
-    return {'status':'recommendation' if best else ('avoid_or_insufficient_data' if options else 'insufficient_data'),'request':{**intent,'duration_minutes':duration},'search_center':{'latitude':lat,'longitude':lon},'best':best,'alternatives':alternatives,'model_reasoning_evidence':model_evidence,'summary':(f"Consider {best['place']['name']} from {best['time']} to {best['end_time']}. At the start: feels like {best['weather']['apparent_temperature']} °C, rain probability {best['weather']['precipitation_probability']}%, wind {best['weather']['wind_speed_10m']} km/h, US AQI {best['us_aqi']}." if best else 'No compared place and time passed all checks, or the required evidence was unavailable.'),'avoided_options':avoid,'compared':{'venues':len(venues),'venues_with_evidence':len(evaluated),'place_hour_pairs':len(options)},'advice':guidance['prepare'],'guidance':guidance,'sources':list({s.get('id',s['url']+str(s.get('parameters',{}))):s for s in sources}.values()),'data_failures':failures,'limitations':['Suitability scores and profile limits are documented prototype heuristics, not medical advice or a safety guarantee.','Air quality is a regional forecast using US AQI, not a street-level measurement.','Traffic uses mapped roads and commute-hour proxies; route times do not include live congestion.','Mapped water and greenery influence preferences and cautions; shade, barriers and local flooding are not verified.','At most five compatible venues are compared. Commutes sample weather/context near a verified route midpoint, not every metre.','Opening hours, access, surface condition and booking must be checked with the venue.'],'attribution':['© OpenStreetMap contributors','Weather: Open-Meteo','Air quality: CAMS via Open-Meteo','Geocoding: Photon / GeoNames','Routing: Valhalla / FOSSGIS'],'model':model.MODEL,'generated_at':datetime.now(TZ).isoformat()}
+    incomplete=sum(bool(o['checks_missing']) for o in options)
+    unsuitable=sum(bool(o['condition_reasons']) for o in options)
+    outcome={'kind':'recommendation' if best else ('mixed' if incomplete and unsuitable else 'incomplete_checks' if incomplete or not options else 'conditions_unsuitable'), 'options_with_missing_checks':incomplete,'options_with_unsuitable_conditions':unsuitable}
+    return {'outcome':outcome,'status':'recommendation' if best else ('avoid_or_insufficient_data' if options else 'insufficient_data'),'request':{**intent,'duration_minutes':duration},'search_center':{'latitude':lat,'longitude':lon},'best':best,'alternatives':alternatives,'model_reasoning_evidence':model_evidence,'summary':(f"Consider {best['place']['name']} from {best['time']} to {best['end_time']}. At the start: feels like {best['weather']['apparent_temperature']} °C, rain probability {best['weather']['precipitation_probability']}%, wind {best['weather']['wind_speed_10m']} km/h, US AQI {best['us_aqi']}." if best else ('The compared forecasts exceed prototype condition limits.' if outcome['kind']=='conditions_unsuitable' else 'Unfavourable forecast conditions and incomplete source checks prevent a recommendation.' if outcome['kind']=='mixed' else 'Required source checks could not finish; this is not a finding that the places are unsuitable.')),'avoided_options':avoid,'compared':{'venues':len(venues),'venues_with_evidence':len(complete),'venues_with_forecast':len(evaluated),'place_hour_pairs':len(options)},'advice':guidance['prepare'],'guidance':guidance,'sources':list({s.get('id',s['url']+str(s.get('parameters',{}))):s for s in sources}.values()),'data_failures':failures,'limitations':['Suitability scores and profile limits are documented prototype heuristics, not medical advice or a safety guarantee.','Air quality is a regional forecast using US AQI, not a street-level measurement.','Traffic uses mapped roads and commute-hour proxies; route times do not include live congestion.','Mapped water and greenery influence preferences and cautions; shade, barriers and local flooding are not verified. Small map extracts can omit unmapped features or enclosing polygons.','At most five compatible venues are compared. Commutes sample weather/context near a verified route midpoint, not every metre.','Opening hours, access, surface condition and booking must be checked with the venue.'],'attribution':['© OpenStreetMap contributors','Weather: Open-Meteo','Air quality: CAMS via Open-Meteo','Geocoding: Photon / GeoNames','Routing: Valhalla / FOSSGIS'],'model':model.MODEL,'generated_at':datetime.now(TZ).isoformat()}

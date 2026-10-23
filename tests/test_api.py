@@ -1,4 +1,5 @@
 import asyncio
+import pytest
 from datetime import datetime,timedelta
 from fastapi.testclient import TestClient
 from geoai import app as module
@@ -27,13 +28,14 @@ def test_live_source_failure_is_not_fabricated(monkeypatch):
     assert r.status_code==503
     assert r.json()['detail']['status']=='source_unavailable'
 
-def test_grounded_recommendation_flow(monkeypatch):
+@pytest.mark.parametrize('wind_missing',[False,True])
+def test_grounded_recommendation_flow(monkeypatch,wind_missing):
     now=datetime.now(module.TZ)
     t=(now+timedelta(hours=2)).replace(minute=0,second=0,microsecond=0)
     source={'url':'test fixture, not live data'}
     async def extract(*args): return {'activity':'running','profile':'general','radius_km':5,'start':(t-timedelta(hours=1)).isoformat(),'end':(t+timedelta(hours=1)).isoformat()}
     async def places(*args): return [{'name':'Fixture park','lat':19,'lon':73,'tags':{'leisure':'park'},'distance_km':1}],source
-    async def forecast(*args): return {'hourly':{'time':[t.replace(tzinfo=None).isoformat(timespec='minutes')], 'apparent_temperature':[25],'temperature_2m':[24],'precipitation_probability':[0],'wind_speed_10m':[5],'wind_direction_10m':[0],'weather_code':[0],'is_day':[1],'uv_index':[2]}},source
+    async def forecast(*args): return {'hourly':{'time':[t.replace(tzinfo=None).isoformat(timespec='minutes')], 'apparent_temperature':[25],'temperature_2m':[24],'precipitation_probability':[0],'wind_speed_10m':[5],'wind_direction_10m':[None if wind_missing else 0],'weather_code':[0],'is_day':[1],'uv_index':[2]}},source
     async def air(*args): return {'hourly':{'time':[t.replace(tzinfo=None).isoformat(timespec='minutes')],'us_aqi':[30]}},source
     async def context(*args): return {'elements':[]},source
     async def route(*args): raise SourceError('Routing unavailable in this fixture')
@@ -44,8 +46,12 @@ def test_grounded_recommendation_flow(monkeypatch):
     monkeypatch.setattr(module.model,'choose',choose)
     r=TestClient(module.app).post('/ask',json={'question':'Compare running conditions','latitude':19,'longitude':73})
     result=r.json()
-    assert result['status']=='recommendation'
-    assert result['best']['us_aqi']==30
+    assert result['status']==('avoid_or_insufficient_data' if wind_missing else 'recommendation')
+    if wind_missing:
+        assert result['best'] is None
+        assert result['outcome']['kind']=='incomplete_checks'
+        assert result['compared']['venues_with_evidence']==0
+    else: assert result['best']['us_aqi']==30
     assert result['compared']['place_hour_pairs']==1
     assert all(s==source for s in result['sources'])
 

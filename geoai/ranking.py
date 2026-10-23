@@ -26,7 +26,11 @@ def context_features(place,elements,wind):
         if not points and 'lat' in p: points=[(p['lat'],p['lon'])]
         if not points: continue
         nearest=min(points,key=lambda p:distance(here,p)); d=distance(here,nearest)
-        kind='major_road' if 'highway' in tags else ('industry' if tags.get('landuse')=='industrial' else ('water' if tags.get('natural')=='water' else 'green_cover'))
+        if tags.get('highway') in ('motorway','trunk','primary'): kind='major_road'
+        elif tags.get('landuse')=='industrial': kind='industry'
+        elif tags.get('natural')=='water': kind='water'
+        elif tags.get('landuse') in ('forest','grass') or tags.get('natural')=='wood' or tags.get('leisure') in ('park','garden'): kind='green_cover'
+        else: continue
         delta=abs((bearing(here,nearest)-wind+180)%360-180) if wind is not None else None
         out.append({'kind':kind,'distance_m':round(d*1000),'upwind_sector': delta is not None and delta<=45,
                     'road_class':tags.get('highway'),'mapped_lanes':tags.get('lanes'),'mapped_maxspeed':tags.get('maxspeed'),
@@ -38,6 +42,7 @@ def score(activity,profile,w,aq,features,place=None,when=None,route=None):
     sensitive=profile!='general'
     if sensitive: heat-=3
     blockers=[]; reasons=[]; penalty=0
+    if place and place.get('map_note'): reasons.append(place['map_note'])
     if place and place.get('tags',{}).get('inferred_sport'): reasons.append('Activity inferred from the mapped place name; verify facilities directly')
     required=['apparent_temperature','precipitation_probability','wind_speed_10m','weather_code','is_day']
     if any(w.get(k) is None for k in required): return None,['Weather data incomplete'],[]
